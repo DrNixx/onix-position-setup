@@ -1,0 +1,35 @@
+{
+  "name": "onix-position-setup",
+  "version": "1.0.0",
+  "description": "Chess position constructor",
+  "main": "built/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrNixx/onix-position-setup.git"
+  },
+  "keywords": [
+    "chess",
+    "position",
+    "setup"
+  ],
+  "author": "Nick Panteleeff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DrNixx/onix-position-setup/issues"
+  },
+  "homepage": "https://github.com/DrNixx/onix-position-setup#readme",
+  "dependencies": {
+    "onix-app": "^1.0.0",
+    "onix-board": "^1.0.1",
+    "onix-ui": "^1.0.15",
+    "react": "^15.6.1",
+    "react-dnd": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.16",
+    "@types/react": "^15.0.39"
+  }
+}

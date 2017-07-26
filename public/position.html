@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>Position setup test</title>
+        <link href="assets/css/bootstrap.css" rel="stylesheet" />
+        <link href="assets/css/chess.css" rel="stylesheet" />
+        <link href="assets/boards/common.css" rel="stylesheet" />
+        <link id="boardBgSet" href="assets/boards/bg/color.css" rel="stylesheet" />
+        <link id="boardSqueareSet" href="assets/boards/squares/color-brown.css" rel="stylesheet" />
+        <link id="boardPieceSet" href="assets/boards/pieces/alpha.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="page-container row-fluid">
+            <div class="page-content ">
+                <div class="content">
+                    <div class="container-fluid">
+                        <div id="boardHere"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="pos-builder.react.js"></script>
+        <script src="pos-builder.app.js"></script>
+        <script src="pos-builder.tests.js"></script>
+        <script>
+            var props = {
+                board: {
+                    size: 4, 
+                    flip: false
+                },
+                dialog: true
+            };
+            
+            onix.PosBuilderTest(props, document.getElementById("boardHere"));
+        </script>
+    </body>
+</html>

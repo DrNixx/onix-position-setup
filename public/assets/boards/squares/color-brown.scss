@@ -1,0 +1,18 @@
+@import "functions";
+
+$white-square-color: #f0d9b5;
+$black-square-color: #b58863;
+
+$on-white-label-color: #333;
+$on-black-label-color: #fff;
+
+.sframe { background: none; }
+.white {
+    .sframe { background-color: $white-square-color }
+}
+
+.black {
+    .sframe { background-color: $black-square-color; }
+}
+
+@include inboard($on-white-label-color, $on-black-label-color);

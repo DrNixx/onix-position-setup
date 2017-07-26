@@ -3,34 +3,30 @@ import * as ReactDOM from 'react-dom';
 import { Unsubscribe } from 'redux';
 import { Observable } from 'rxjs';
 import { Color, Castle, FenStandartStart, Piece, Square, Position } from 'onix-chess';
-import { BoardSize } from 'onix-board';
 import { OpeningPosition } from './Constants';
-import { BoardSettings } from 'onix-board';
 import { DumbPosition } from './DumbPosition';
 import { createPositionStore, PositionState, PositionStore } from './PositionStore';
-import { BoardState } from '../BoardState';
-import { BoardAction } from '../BoardActions';
-import * as boardActions from '../BoardActionConsts';
+import { BoardSize, BoardSettings, BoardState, BoardActions, BoardActionConsts as bac } from 'onix-board';
 import { Logger } from 'onix-core';
 
-export interface ChessPositionProps {
+export interface PosBuilderProps {
     board: BoardSettings,
     locale?: string,
     url?: string,
     dialog?: boolean,
 }
 
-interface ChessPositionState {
+export interface PosBuilderState {
     openings: OpeningPosition[],
 }
 
-export class ViewPosition extends React.Component<ChessPositionProps, ChessPositionState> {
+export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState> {
     private store: PositionStore;
     private storeUnsubscribe: Unsubscribe;
     private posMap: string[] = [];
     private r = new RegExp(/(.*)\s\d{1,2}\s\d{1,2}$/);
 
-    constructor(props: ChessPositionProps) {
+    constructor(props: PosBuilderProps) {
         super(props);
 
         const { locale, board } = this.props;
@@ -50,7 +46,7 @@ export class ViewPosition extends React.Component<ChessPositionProps, ChessPosit
                 coords: (typeof coords !== "undefined") ? !!coords : true,
                 frame: (typeof frame !== "undefined") ? !!frame : true,
                 moveturn: true,
-                position: new ChessPosition(fena),
+                position: new Position(fena),
                 fen: fena,
                 markers: markers,
                 selection: {
@@ -110,35 +106,35 @@ export class ViewPosition extends React.Component<ChessPositionProps, ChessPosit
     }
 
     private flipBoard = (flag: boolean) => {
-        this.store.dispatch({ type: boardActions.FLIP_BOARD, flag: flag } as BoardAction);
+        this.store.dispatch({ type: bac.FLIP_BOARD, flag: flag } as BoardActions.BoardAction);
     }
 
     private setCoords = (flag: boolean) => {
-        this.store.dispatch({ type: boardActions.SET_COORDS, flag: flag } as BoardAction);
+        this.store.dispatch({ type: bac.SET_COORDS, flag: flag } as BoardActions.BoardAction);
     }
 
     private setFrame = (flag: boolean) => {
-        this.store.dispatch({ type: boardActions.SET_FRAME, flag: flag } as BoardAction);
+        this.store.dispatch({ type: bac.SET_FRAME, flag: flag } as BoardActions.BoardAction);
     }
 
     private setMoveTurn = (flag: boolean) => {
-        this.store.dispatch({ type: boardActions.SET_MOVETURN, flag: flag } as BoardAction);
+        this.store.dispatch({ type: bac.SET_MOVETURN, flag: flag } as BoardActions.BoardAction);
     }
 
     private resize = (size: BoardSize) => {
-        this.store.dispatch({ type: boardActions.CHANGE_SIZE, size: size } as BoardAction);
+        this.store.dispatch({ type: bac.CHANGE_SIZE, size: size } as BoardActions.BoardAction);
     }
 
     private setPieces = (piece: string) => {
-        this.store.dispatch({ type: boardActions.SET_PIECE, piece: piece } as BoardAction);
+        this.store.dispatch({ type: bac.SET_PIECE, piece: piece } as BoardActions.BoardAction);
     }
 
     private setSquares = (square: string) => {
-        this.store.dispatch({ type: boardActions.SET_SQUARE, square: square } as BoardAction);
+        this.store.dispatch({ type: bac.SET_SQUARE, square: square } as BoardActions.BoardAction);
     }
 
     private changeColor = (color) => {
-        this.store.dispatch({ type: boardActions.WHO_MOVE, color: color } as BoardAction);
+        this.store.dispatch({ type: bac.WHO_MOVE, color: color } as BoardActions.BoardAction);
     }
 
     private changeCastle = (flag: boolean, val: string) => {
@@ -162,16 +158,16 @@ export class ViewPosition extends React.Component<ChessPositionProps, ChessPosit
         }
 
         if (color !== Color.NoColor) {
-            this.store.dispatch({ type: boardActions.SET_CASTLE, color: color, side: side, flag: flag } as BoardAction);
+            this.store.dispatch({ type: bac.SET_CASTLE, color: color, side: side, flag: flag } as BoardActions.BoardAction);
         }
     }
 
     private changeMoveNo = (move: number) => {
-        this.store.dispatch({ type: boardActions.SET_MOVENO, move: move } as BoardAction);
+        this.store.dispatch({ type: bac.SET_MOVENO, move: move } as BoardActions.BoardAction);
     }
 
     private changeEp = (sq: number) => {
-        this.store.dispatch({ type: boardActions.SET_EP, ep_target: sq } as BoardAction);
+        this.store.dispatch({ type: bac.SET_EP, ep_target: sq } as BoardActions.BoardAction);
     }
 
     private changeStart? = (fen: string) => {
@@ -181,7 +177,7 @@ export class ViewPosition extends React.Component<ChessPositionProps, ChessPosit
     }
 
     private changeFen = (fen: string) => {
-        this.store.dispatch({ type: boardActions.SET_FEN, fen: fen } as BoardAction);
+        this.store.dispatch({ type: bac.SET_FEN, fen: fen } as BoardActions.BoardAction);
     }
 
     canMove = (from: number, to: number): boolean => {
@@ -258,6 +254,6 @@ export class ViewPosition extends React.Component<ChessPositionProps, ChessPosit
     }
 }
 
-export const PositionSetup = (props: ChessPositionProps, container: HTMLElement) => {
-    ReactDOM.render(React.createElement(ViewPosition, props), container);
+export const PositionSetup = (props: PosBuilderProps, container: HTMLElement) => {
+    ReactDOM.render(React.createElement(PosBuilder, props), container);
 };

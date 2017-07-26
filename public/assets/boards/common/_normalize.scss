@@ -1,0 +1,76 @@
+﻿@import "functions";
+
+table tr th, table tr td {
+    padding: 0;
+}
+
+.board {
+    overflow: hidden;
+    z-index: 10000;
+}
+
+.board-body, .holder-body {
+	position: relative;
+}
+
+.board-border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    table {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        th, td {
+            padding: 0 !important;
+        }
+    }
+
+    .board-frame {
+        position: absolute;
+        background-color: #666;
+
+        .board-squares {
+            position: absolute;
+        }
+    }
+}
+
+.board-labels {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    color: #000;
+
+    li {
+        text-align: center;
+    }
+
+    &.board-fyles-labels {
+        li {
+            display: inline-table;
+
+            & > span {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+            }
+        }
+    }
+
+    &.board-rows-labels {
+        li {
+            display: table-row;
+
+            & > span {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+            }
+        }
+    }
+}
+

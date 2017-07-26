@@ -1,15 +1,23 @@
+var path = require("path");
 var webpack = require('webpack');
 
 module.exports = {
     entry: {
+        react: ['react', 'react-dom'],
         app: ["./built/index.js"],
+        tests: ["./built/test/index.js"],
     },
 
     output: {
         libraryTarget: "umd",
-        library: "onix.position",
-        filename: "./onix-position-setup.js",
+        library: "onix",
+        path: path.join(__dirname, "public"),
+		filename: "pos-builder.[name].js"
     },
+
+    plugins:[
+        new webpack.optimize.CommonsChunkPlugin({ name: "react" }),
+    ],
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",

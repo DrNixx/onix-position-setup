@@ -1,7 +1,6 @@
 import { Store, createStore as reduxCreateStore, combineReducers } from 'redux';
 import { IntlState, intlReducer } from 'onix-app';
-import { boardReducer } from '../BoardReducer';
-import { BoardState } from '../BoardState';
+import { BoardState, boardReducer } from 'onix-board';
 
 export interface PositionState {
     intl: IntlState,

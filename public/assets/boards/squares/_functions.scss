@@ -1,0 +1,32 @@
+﻿@mixin inboard($on-white-label-color, $on-black-label-color) {
+    .inboard {
+        [data-fyle-label="a"],[data-fyle-label="c"],[data-fyle-label="e"],[data-fyle-label="g"],
+        [data-row-label="1"], [data-row-label="3"], [data-row-label="5"], [data-row-label="7"]  {
+            color: $on-black-label-color;
+        }
+
+        [data-fyle-label="b"],[data-fyle-label="d"],[data-fyle-label="f"],[data-fyle-label="h"],
+        [data-row-label="2"], [data-row-label="4"], [data-row-label="6"], [data-row-label="8"]  {
+            color: $on-white-label-color;
+        }
+
+        &.flip {
+            [data-fyle-label="a"],[data-fyle-label="c"],[data-fyle-label="e"],[data-fyle-label="g"],
+            [data-row-label="1"], [data-row-label="3"], [data-row-label="5"], [data-row-label="7"] {
+                color: $on-white-label-color;
+            }
+
+            [data-fyle-label="b"],[data-fyle-label="d"],[data-fyle-label="f"],[data-fyle-label="h"],
+            [data-row-label="2"], [data-row-label="4"], [data-row-label="6"], [data-row-label="8"]  {
+                color: $on-black-label-color;
+            }
+        }
+    }
+}
+
+@function srandom($base) {
+    @return $base - random($base) * 2;
+}
+
+
+

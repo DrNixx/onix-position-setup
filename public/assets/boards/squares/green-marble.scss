@@ -1,0 +1,36 @@
+@import "functions";
+
+$white-square-color: #ccc;
+$black-square-color: #666;
+
+$on-white-label-color: #333;
+$on-black-label-color: #fff;
+
+.sframe { background-attachment: scroll; }
+.white {
+    .sframe { background-color: $white-square-color }
+}
+
+.black {
+    .sframe { background-color: $black-square-color; }
+}
+
+@include inboard($on-white-label-color, $on-black-label-color);
+
+.size1 .white .sframe {	background-image: url(green-marble/sqw20.jpg); }
+.size1 .black .sframe {	background-image: url(green-marble/sqb20.jpg); }
+
+.size2 .white .sframe {	background-image: url(green-marble/sqw30.jpg); }
+.size2 .black .sframe {	background-image: url(green-marble/sqb30.jpg); }
+
+.size3 .white .sframe {	background-image: url(green-marble/sqw40.jpg); }
+.size3 .black .sframe {	background-image: url(green-marble/sqb40.jpg); }
+
+.size4 .white .sframe {	background-image: url(green-marble/sqw50.jpg); }
+.size4 .black .sframe {	background-image: url(green-marble/sqb50.jpg); }
+
+.size5 .white .sframe {	background-image: url(green-marble/sqw60.jpg); }
+.size5 .black .sframe {	background-image: url(green-marble/sqb60.jpg); }
+
+.size6 .white .sframe {	background-image: url(green-marble/sqw80.jpg); }
+.size6 .black .sframe {	background-image: url(green-marble/sqb80.jpg); }

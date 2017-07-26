@@ -1,6 +1,9 @@
 node_modules
 built
 .vscode
+
+public/*.js
+public/*.js.map
 /onix-position-setup.js
 /onix-position-setup.js.map
 

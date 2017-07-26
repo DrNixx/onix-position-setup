@@ -1,0 +1,8 @@
+.board-body,
+.holder-body {
+  background-color: transparent;
+  background-image: none; }
+
+.board-fyles-labels,
+.board-rows-labels {
+  color: #000; }

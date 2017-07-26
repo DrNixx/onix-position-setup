@@ -1,0 +1,52 @@
+@import "functions";
+
+$white-square-color: #FBD19E;
+$black-square-color: #9F6E5B;
+
+$on-white-label-color: #333;
+$on-black-label-color: #fff;
+
+.sframe { background-attachment: scroll; }
+.white {
+    .sframe { background-color: $white-square-color }
+}
+
+.black {
+    .sframe { background-color: $black-square-color; }
+}
+
+@include inboard($on-white-label-color, $on-black-label-color);
+
+.size1 .white .sframe {	background-image: url(cedar/sqw20.jpg); }
+.size1 .black .sframe {	background-image: url(cedar/sqb20.jpg); }
+
+.size2 .white .sframe {	background-image: url(cedar/sqw30.jpg); }
+.size2 .black .sframe {	background-image: url(cedar/sqb30.jpg); }
+
+.size3 .white .sframe {	background-image: url(cedar/sqw40.jpg); }
+.size3 .black .sframe {	background-image: url(cedar/sqb40.jpg); }
+
+.size4 .white .sframe {	background-image: url(cedar/sqw50.jpg); }
+.size4 .black .sframe {	background-image: url(cedar/sqb50.jpg); }
+
+.size5 .white .sframe {	background-image: url(cedar/sqw60.jpg); }
+.size5 .black .sframe {	background-image: url(cedar/sqb60.jpg); }
+
+.size6 .white .sframe {	background-image: url(cedar/sqw80.jpg); }
+.size6 .black .sframe {	background-image: url(cedar/sqb80.jpg); }
+
+.square-from-to .sborder {
+	
+}
+
+.square-last-from-to .sborder {
+	
+}
+
+.square-moved-from-to .sborder {
+	
+}
+
+.square-can-move-to .sborder {
+
+}

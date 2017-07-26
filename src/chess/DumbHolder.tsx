@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Color, BoardSize, Orientation, BoardSizeClass } from 'onix-board';
-import { BoardRelatedStore } from '../BoardState';
-import { Piece, Square } from 'onix-chess';
-import { ChessPiece, ChessSquare } from 'onix-board';
+import { BoardSize, Orientation, BoardSizeClass } from 'onix-board';
+import { Color, Piece, Square } from 'onix-chess';
+import { BoardRelatedStore, ChessPiece, ChessSquare } from 'onix-board';
 
-interface DumbHolderProps {
+export interface DumbHolderProps {
     store: BoardRelatedStore,
     orient: Orientation,
 }

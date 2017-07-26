@@ -1,23 +1,17 @@
 import * as React from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { Intl } from '../../Intl';
-import { onixPostMessage } from '../../net/PostMessage';
+import { Intl } from 'onix-core';
+import { onixPostMessage } from 'onix-io';
+import { intVal, pushif } from 'onix-core';
+import { Color, Castle, Piece, Square } from 'onix-chess';
+import { BoardMode, BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
+import { Row, Col, Button, FormGroup, FormControl, ControlLabel, Checkbox, TextWithCopy } from 'onix-ui';
+import { SizeSelector, PieceSelector, SquareSelector, WhoMoveSelector, StartPosSelector } from 'onix-chess-ctrls';
 import { PositionStore } from './PositionStore';
-import { intVal } from '../../fn/Number';
-import { pushif } from '../../fn/Array';
-import { Color, Castle, BoardMode, BoardSize, Orientation, OpeningPosition } from '../Constants';
-import { Piece, Square } from '../Engine';
+import { OpeningPosition } from './Constants';
 import { ChessHolder } from './ChessHolder';
-import { ChessBoard } from '../ChessBoard';
-import { ChessDragLayer } from '../ChessDragLayer';
-import { SizeSelector } from '../../ui/components/chess/SizeSelector';
-import { PieceSelector } from '../../ui/components/chess/PieceSelector';
-import { SquareSelector } from '../../ui/components/chess/SquareSelector';
-import { WhoMoveSelector } from '../../ui/components/chess/WhoMoveSelector';
-import { StartPosSelector } from '../../ui/components/chess/StartPosSelector';
-import { Row, Col, Button, FormGroup, FormControl, ControlLabel, Checkbox, TextWithCopy } from '../../ui';
-
+import { registerStrings } from '../Intl';
 
 export interface DumbPositionProps {
     store?: PositionStore,
@@ -39,7 +33,7 @@ export interface DumbPositionProps {
     changeStart: (val: string) => void,
 }
 
-interface DumbPositionState {
+export interface DumbPositionState {
     ep_target: string,
     markers: string
 }
@@ -48,6 +42,9 @@ interface DumbPositionState {
 export class DumbPosition extends React.Component<DumbPositionProps, DumbPositionState> {
     constructor(props: DumbPositionProps) {
         super(props);
+
+        registerStrings();
+
         const state = this.props.store.getState();
         this.state = {
             ep_target: this.epName(state.board.position.EpTarget),

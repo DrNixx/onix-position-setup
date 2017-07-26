@@ -7,7 +7,7 @@ module.exports = {
 
     output: {
         libraryTarget: "umd",
-        library: "onix.position",
+        library: "onix",
         filename: "./onix-position-setup.js",
     },
 

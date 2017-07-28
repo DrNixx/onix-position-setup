@@ -1,1 +1,1 @@
-export { PosBuilder, PosBuilderProps } from './chess/PosBuilder';
+export { PosBuilder, PositionSetup } from './chess/PosBuilder';

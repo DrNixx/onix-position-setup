@@ -2,8 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Unsubscribe } from 'redux';
 import { Observable } from 'rxjs';
-import { Color, Castle, FenStandartStart, Piece, Square, Position } from 'onix-chess';
-import { OpeningPosition } from './Constants';
+import { Color, Castle, FenStandartStart, Piece, Square, Position, IOpeningPosition } from 'onix-chess';
 import { DumbPosition } from './DumbPosition';
 import { createPositionStore, PositionState, PositionStore } from './PositionStore';
 import { BoardSize, BoardSettings, BoardState, BoardActions, BoardActionConsts as bac } from 'onix-board';
@@ -17,7 +16,7 @@ export interface PosBuilderProps {
 }
 
 export interface PosBuilderState {
-    openings: OpeningPosition[],
+    openings: IOpeningPosition[],
 }
 
 export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState> {
@@ -91,7 +90,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     }
 
     private ajaxCallback = (data?: any) => {
-        let openings: OpeningPosition[] = [];
+        let openings: IOpeningPosition[] = [];
         for (var i = 0; i < data.length; i++) {
             const option = data[i];
             const key = this.getNormFen(option.fen);

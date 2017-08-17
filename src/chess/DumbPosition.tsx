@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import toSafeInteger = require('lodash/toSafeInteger');
 import { Intl as IntlCore } from 'onix-core';
 import { onixPostMessage } from 'onix-io';
-import { intVal, pushif } from 'onix-core';
+import { pushif } from 'onix-core';
 import { Color, Castle, Piece, Square, IOpeningPosition } from 'onix-chess';
 import { BoardMode, BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
 import { Row, Col, Button, FormGroup, FormControl, ControlLabel, Checkbox, TextWithCopy } from 'onix-ui';
@@ -77,7 +78,7 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
     private changeMoveNo? = (e) => {
         const { changeMoveNo } = this.props;
         if (changeMoveNo) {
-            changeMoveNo(intVal(e.target.value));
+            changeMoveNo(toSafeInteger(e.target.value));
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "onix-position-setup",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Chess position constructor",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -27,24 +27,24 @@
   "homepage": "https://github.com/DrNixx/onix-position-setup#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "onix-app": "^1.0.8",
-    "onix-board": "^1.1.17",
-    "onix-chess": "^1.1.14",
-    "onix-chess-ctrls": "^1.0.10",
-    "onix-core": "^1.2.28",
-    "onix-io": "^1.1.8",
-    "onix-ui": "^1.1.32",
-    "react": "^15.6.1",
-    "react-dnd": "^2.4.0",
+    "onix-app": "^1.0.11",
+    "onix-board": "^1.1.18",
+    "onix-chess": "^1.1.15",
+    "onix-chess-ctrls": "^1.0.12",
+    "onix-core": "^1.2.29",
+    "onix-io": "^1.1.10",
+    "onix-ui": "^1.1.33",
+    "react": "^15.6.2",
+    "react-dnd": "^2.5.3",
     "warning": "^3.0.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.73",
-    "@types/node": "^8.0.24",
-    "@types/react": "^15.6.1",
+    "@types/lodash": "^4.14.76",
+    "@types/node": "^8.0.31",
+    "@types/react": "^15.6.4",
     "awesome-typescript-loader": "^3.2.3",
     "source-map-loader": "^0.2.1",
-    "typescript": "^2.4.2",
+    "typescript": "^2.5.3",
     "webpack": "^2.7.0"
   }
 }

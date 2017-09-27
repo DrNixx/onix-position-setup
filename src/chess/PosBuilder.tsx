@@ -132,7 +132,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         this.store.dispatch({ type: bac.SET_SQUARE, square: square } as BoardActions.BoardAction);
     }
 
-    private changeColor = (color) => {
+    private changeColor = (color: number) => {
         this.store.dispatch({ type: bac.WHO_MOVE, color: color } as BoardActions.BoardAction);
     }
 

@@ -1,10 +1,8 @@
 node_modules
-built
+dist
 .vscode
 
 public/*.js
 public/*.js.map
-/onix-position-setup.js
-/onix-position-setup.js.map
 
 npm-debug.log

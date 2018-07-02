@@ -2,6 +2,7 @@
 /samples
 /src/scss
 /test
+/public
 /tsconfig.json
 /*.config.js
 /*.js.map

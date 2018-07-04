@@ -1,5 +1,6 @@
 import { Intl as IntlCore } from 'onix-core';
 import { Intl as IntlBoard } from 'onix-board';
+import { Intl as IntlCtrl } from 'onix-chess-ctrls';
 
 export class Intl {
     private static intlInitialized = false;
@@ -8,6 +9,7 @@ export class Intl {
         if (!Intl.intlInitialized) {
             
             IntlBoard.register();
+            IntlCtrl.register();
 
             IntlCore.registerStrings('builder', {
                 'ru-ru': {

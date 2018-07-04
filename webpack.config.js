@@ -1,11 +1,11 @@
 const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    devtool: 'inline-source-map', 
+    devtool: 'source-map', 
 
     entry: {
-        react: ['react', 'react-dom'],
         app: ["./src/index.ts"],
         tests: ["./src/test/index.ts"]
     },
@@ -13,15 +13,20 @@ module.exports = {
     output: {
         libraryTarget: "umd",
         library: "onix",
-        path: path.join(__dirname, "public"),
+        path: path.join(__dirname, "public/js"),
         filename: "pos-builder.[name].js"
     },
+
+    plugins: [
+        new CleanWebpackPlugin(['public/js'])
+    ],
 
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                loader: 'ts-loader',
+                options: { configFile: 'tsconfig.webpack.json' },
                 exclude: /node_modules/
             }
         ]
@@ -29,9 +34,5 @@ module.exports = {
 
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
-    },
-
-    devServer: {
-      contentBase: './public'
     }
 };

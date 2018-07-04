@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BoardRelatedStore } from 'onix-board';
 import { DumbHolder } from './DumbHolder';
-import { BoardSize, Orientation, BoardSizeClass } from 'onix-board';
+import { Orientation } from 'onix-board';
 
 export interface HolderProps {
     store: BoardRelatedStore,

@@ -1,12 +1,12 @@
+import toSafeInteger from 'lodash-es/toSafeInteger';
 import * as React from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import toSafeInteger = require('lodash/toSafeInteger');
 import { Intl as IntlCore } from 'onix-core';
 import { onixPostMessage } from 'onix-io';
 import { pushif } from 'onix-core';
 import { Color, Castle, Piece, Square, IOpeningPosition } from 'onix-chess';
-import { BoardMode, BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
+import { BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
 import { Row, Col, Button, FormGroup, FormControl, ControlLabel, Checkbox, TextWithCopy } from 'onix-ui';
 import { SizeSelector, PieceSelector, SquareSelector, WhoMoveSelector, StartPosSelector } from 'onix-chess-ctrls';
 import { PositionStore } from './PositionStore';

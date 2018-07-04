@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Unsubscribe } from 'redux';
-import { Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 import { Color, Castle, FenStandartStart, Piece, Square, Position, IOpeningPosition } from 'onix-chess';
 import { DumbPosition } from './DumbPosition';
 import { createPositionStore, PositionState, PositionStore } from './PositionStore';
-import { BoardSize, BoardSettings, BoardState, BoardActions, BoardActionConsts as bac } from 'onix-board';
-import { Logger } from 'onix-core';
+import { BoardSize, BoardSettings, BoardActions, BoardActionConsts as bac } from 'onix-board';
 
 export interface PosBuilderProps {
     board: BoardSettings,
@@ -71,7 +70,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         if (process.env.NODE_ENV === 'production') {
             const ajaxCallback = this.ajaxCallback;
-            Observable.ajax({ url:'https://www.chess-online.com/api/position/starting-positions', crossDomain: true })
+            ajax({ url:'https://www.chess-online.com/api/position/starting-positions', crossDomain: true })
                 .subscribe(
                     function (data) {
                         ajaxCallback(data.response); 
@@ -188,10 +187,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         return true; // (to == Square.NullSquare) || (state.board.position.getPiece(to) == Piece.NoPiece);
     }
 
-    doMove = (from: number, to: number, piece: number) => {
-        const state: PositionState = this.store.getState();
-        const position = state.board.position;
-
+    doMove = (from: number, to: number, piece: number, position: Position) => {
         if (from !== Square.NullSquare) {
             piece = piece || position.getPiece(from);
             if (!position.removePiece(piece, from)) {

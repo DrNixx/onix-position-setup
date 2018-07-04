@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { BoardSize, Orientation, BoardSizeClass } from 'onix-board';
+import { Orientation, BoardSizeClass } from 'onix-board';
 import { Color, Piece, Square } from 'onix-chess';
-import { BoardRelatedStore, ChessPiece, ChessSquare } from 'onix-board';
+import { BoardRelatedStore, ChessSquare } from 'onix-board';
 
 export interface DumbHolderProps {
     store: BoardRelatedStore,
@@ -68,6 +68,8 @@ export class DumbHolder extends React.Component<DumbHolderProps, {}> {
     }
 
     render() {
+        const { store } = this.props;
+
         return (
             <div className={this.classNames()}>
                 <div className="holder-body">

@@ -1,8 +1,7 @@
 /node_modules
-/samples
+/public
 /src/scss
 /test
-/public
 /tsconfig.json
 /*.config.js
 /*.js.map
@@ -10,4 +9,5 @@
 /.gitignore
 /.npmignore
 /.vscode
+stats.json
 debug.log

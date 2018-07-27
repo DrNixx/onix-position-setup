@@ -172,7 +172,6 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                 store={this.props.store}
                                 dnd={true}
                                 legal={false}
-                                getPiece={position.getPiece}
                             />
                             {renderDialogButton()}
                         </div>

@@ -44,7 +44,9 @@ export class DumbHolder extends React.Component<DumbHolderProps, {}> {
                 name={name} 
                 piece={piece} 
                 dnd={true}
-                key={name} />
+                key={name}
+                canMove={() => { return true; }}
+            />
         );
     }
 

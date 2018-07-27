@@ -29,7 +29,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         const { locale, board } = this.props;
         const { size, piece, square, flip, coords, frame, fen, markers } = board;
-        const { canMove, doMove } = this;
+        const { doMove } = this;
         const fena = fen || FenStandartStart;
         
         this.store = createPositionStore({
@@ -53,7 +53,6 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                         square: Square.NullSquare
                     }
                 },
-                canMove: canMove,
                 doMove: doMove
             }
         });
@@ -176,15 +175,6 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     private changeFen = (fen: string) => {
         this.store.dispatch({ type: bac.SET_FEN, fen: fen } as BoardActions.BoardAction);
-    }
-
-    canMove = (from: number, to: number): boolean => {
-        if (typeof to === "undefined") {
-            return typeof from !== "undefined";
-        }
-
-        // const state: PositionState = this.store.getState();
-        return true; // (to == Square.NullSquare) || (state.board.position.getPiece(to) == Piece.NoPiece);
     }
 
     doMove = (from: number, to: number, piece: number, position: Position) => {

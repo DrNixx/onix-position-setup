@@ -162,200 +162,202 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
             <div className="pos-builder">
                 <Row>
                     <Col md={12}>
-                        <div className="board-container">
-                            <div className="holder-container">
-                                <ChessHolder 
+                        <div className="d-block d-lg-flex">
+                            <div className="board-container">
+                                <div className="holder-container">
+                                    <ChessHolder 
+                                        store={this.props.store}
+                                        orient={Orientation.Horizontal} />
+                                </div>
+                                <ChessBoard
                                     store={this.props.store}
-                                    orient={Orientation.Horizontal} />
+                                    dnd={true}
+                                    legal={false}
+                                />
+                                {renderDialogButton()}
                             </div>
-                            <ChessBoard
-                                store={this.props.store}
-                                dnd={true}
-                                legal={false}
-                            />
-                            {renderDialogButton()}
+                            <div className="controls flex-grow-1">
+                                <div className="code-row">
+                                    <Row>
+                                        <Col md={12}>
+                                            <FormGroup controlId="fen">
+                                                <ControlLabel>{IntlCore.t("chess", "fen")}</ControlLabel>
+                                                <TextWithCopy value={fen} scale="small" placeholder={IntlCore.t("chess", "fen")} />
+                                            </FormGroup>    
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <FormGroup controlId="image_link">
+                                                <ControlLabel>{IntlCore.t("builder", "image_link")}</ControlLabel>
+                                                <TextWithCopy value={makeLink()} scale="small" placeholder={IntlCore.t("builder", "image_link")} />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <FormGroup controlId="forum_code">
+                                                <ControlLabel>{IntlCore.t("builder", "forum_code")}</ControlLabel>
+                                                <TextWithCopy value={makeCode()} scale="small" placeholder={IntlCore.t("builder", "forum_code")} />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                <div className="pos-sets">
+                                    <Row>
+                                        <Col md={4}>
+                                        <FormGroup controlId="size">
+                                                <ControlLabel>{IntlCore.t("chess", "size")}</ControlLabel>
+                                                <SizeSelector defaultSize={size} onChangeSize={resize} />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={4}>
+                                            <FormGroup controlId="piece">
+                                                <ControlLabel>{IntlCore.t("chess", "pieces")}</ControlLabel>
+                                                <PieceSelector defaultPiece={piece} onChangePiece={setPieces} />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={4}>
+                                            <FormGroup controlId="square">
+                                                <ControlLabel>{IntlCore.t("chess", "squares")}</ControlLabel>
+                                                <SquareSelector defaultSquare={square} onChangeSquare={setSquares} />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                <div className="pos-start">
+                                    <Row>
+                                        <Col md={8} sm={12}>
+                                            <FormGroup controlId="startpos">
+                                                <ControlLabel srOnly={true}>{IntlCore.t("chess-ctrls", "position_label")}</ControlLabel>
+                                                <StartPosSelector fen={fen} openingsPos={openingsPos} onChange={this.onStartChange} />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={4} sm={12}>
+                                            <FormGroup controlId="who_move">
+                                                <ControlLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</ControlLabel>
+                                                <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={changeColor} />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                <div className="pos-params">
+                                    <div><strong>{IntlCore.t("builder", "pos_param")}</strong></div>
+                                    <Row>
+                                        <Col md={3} sm={6}>
+                                            <FormGroup controlId="moveNo">
+                                                <ControlLabel>{IntlCore.t("chess", "move_no")}</ControlLabel>
+                                                <FormControl scale="small" value={position.getMoveNo()} onChange={this.changeMoveNo} />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={3} sm={6}>
+                                            <FormGroup controlId="epTarget">
+                                                <ControlLabel>{IntlCore.t("chess", "ep_target")}</ControlLabel>
+                                                <FormControl 
+                                                    scale="small"
+                                                    value={this.state.ep_target} 
+                                                    title={IntlCore.t("builder", "ep_target_hint")} 
+                                                    onChange={this.onEpChange} />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={6}>
+                                            <FormGroup controlId="marks">
+                                                <ControlLabel>{IntlCore.t("builder", "marks")}</ControlLabel>
+                                                <FormControl 
+                                                    scale="small"
+                                                    value={this.state.markers} 
+                                                    title={IntlCore.t("builder", "marks_hint")}
+                                                    onChange={this.onMarkChange} />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                <div className="pos-castle">
+                                    <div><strong>{IntlCore.t("chess", "castle")}</strong></div>
+                                    <Row>
+                                        <Col md={6}>
+                                            <div className="color-group">
+                                                <label>{IntlCore.t("chess", "white")}</label>
+                                                <Row>
+                                                    <Col xs={5}>
+                                                        <Checkbox 
+                                                            id ="wck"
+                                                            value={Piece.WKing.toString()} 
+                                                            onChangeState={changeCastle} 
+                                                            checked={this.hasCastle(Color.White, Castle.KSide)}>{Castle.K}</Checkbox>
+                                                    </Col>
+                                                    <Col xs={7}>
+                                                        <Checkbox 
+                                                            id ="wcq"
+                                                            value={Piece.WQueen.toString()} 
+                                                            onChangeState={changeCastle} 
+                                                            checked={this.hasCastle(Color.White, Castle.QSide)}>{Castle.Q}</Checkbox>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                        <Col md={6}>
+                                            <div className="color-group">
+                                                <label>{IntlCore.t("chess", "black")}</label>
+                                                <Row>
+                                                    <Col xs={5}>
+                                                        <Checkbox 
+                                                            id ="bck"
+                                                            value={Piece.BKing.toString()} 
+                                                            onChangeState={changeCastle} 
+                                                            checked={this.hasCastle(Color.Black, Castle.KSide)}>{Castle.K}</Checkbox>
+                                                    </Col>
+                                                    <Col xs={7}>
+                                                        <Checkbox 
+                                                            id ="bcq"
+                                                            value={Piece.BQueen.toString()} 
+                                                            onChangeState={changeCastle} 
+                                                            checked={this.hasCastle(Color.Black, Castle.QSide)}>{Castle.Q}</Checkbox>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                    </Row>                                
+                                </div>
+                                <div className="pos-display">
+                                    <Row>
+                                        <Col md={3} sm={6}>
+                                            <Checkbox 
+                                                id ="flip" 
+                                                value="1" 
+                                                onChangeState={flipBoard} 
+                                                checked={flip}>{IntlCore.t("builder", "display_flip")}</Checkbox>
+                                        </Col>
+                                        <Col md={3} sm={6}>
+                                            <Checkbox 
+                                                id ="coords" 
+                                                value="1" 
+                                                onChangeState={setCoords} 
+                                                checked={coords}>{IntlCore.t("builder", "display_coord")}</Checkbox>
+                                        </Col>
+                                        <Col md={3} sm={6}>
+                                            <Checkbox 
+                                                id ="frame" 
+                                                value="1" 
+                                                onChangeState={setFrame} 
+                                                checked={frame}>{IntlCore.t("builder", "display_frame")}</Checkbox>
+                                        </Col>
+                                        <Col md={3} sm={6}>
+                                            <Checkbox 
+                                                id ="turn" 
+                                                value="1" 
+                                                onChangeState={setMoveTurn} 
+                                                checked={moveturn}>{IntlCore.t("builder", "display_moveturn")}</Checkbox>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </div>
+                            <ChessDragLayer size={size} />
                         </div>
-                        <div className="controls">
-                            <div className="code-row">
-                                <Row>
-                                    <Col md={12}>
-                                        <FormGroup controlId="fen">
-                                            <ControlLabel>{IntlCore.t("chess", "fen")}</ControlLabel>
-                                            <TextWithCopy value={fen} scale="small" placeholder={IntlCore.t("chess", "fen")} />
-                                        </FormGroup>    
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={12}>
-                                        <FormGroup controlId="image_link">
-                                            <ControlLabel>{IntlCore.t("builder", "image_link")}</ControlLabel>
-                                            <TextWithCopy value={makeLink()} scale="small" placeholder={IntlCore.t("builder", "image_link")} />
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={12}>
-                                        <FormGroup controlId="forum_code">
-                                            <ControlLabel>{IntlCore.t("builder", "forum_code")}</ControlLabel>
-                                            <TextWithCopy value={makeCode()} scale="small" placeholder={IntlCore.t("builder", "forum_code")} />
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <div className="pos-sets">
-                                <Row>
-                                    <Col md={4}>
-                                    <FormGroup controlId="size">
-                                            <ControlLabel>{IntlCore.t("chess", "size")}</ControlLabel>
-                                            <SizeSelector defaultSize={size} onChangeSize={resize} />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={4}>
-                                        <FormGroup controlId="piece">
-                                            <ControlLabel>{IntlCore.t("chess", "pieces")}</ControlLabel>
-                                            <PieceSelector defaultPiece={piece} onChangePiece={setPieces} />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={4}>
-                                        <FormGroup controlId="square">
-                                            <ControlLabel>{IntlCore.t("chess", "squares")}</ControlLabel>
-                                            <SquareSelector defaultSquare={square} onChangeSquare={setSquares} />
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <div className="pos-start">
-                                <Row>
-                                    <Col md={8} sm={12}>
-                                        <FormGroup controlId="startpos">
-                                            <ControlLabel srOnly={true}>{IntlCore.t("chess-ctrls", "position_label")}</ControlLabel>
-                                            <StartPosSelector fen={fen} openingsPos={openingsPos} onChange={this.onStartChange} />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={4} sm={12}>
-                                        <FormGroup controlId="who_move">
-                                            <ControlLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</ControlLabel>
-                                            <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={changeColor} />
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <div className="pos-params">
-                                <div><strong>{IntlCore.t("builder", "pos_param")}</strong></div>
-                                <Row>
-                                    <Col md={3} sm={6}>
-                                        <FormGroup controlId="moveNo">
-                                            <ControlLabel>{IntlCore.t("chess", "move_no")}</ControlLabel>
-                                            <FormControl scale="small" value={position.getMoveNo()} onChange={this.changeMoveNo} />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={3} sm={6}>
-                                        <FormGroup controlId="epTarget">
-                                            <ControlLabel>{IntlCore.t("chess", "ep_target")}</ControlLabel>
-                                            <FormControl 
-                                                scale="small"
-                                                value={this.state.ep_target} 
-                                                title={IntlCore.t("builder", "ep_target_hint")} 
-                                                onChange={this.onEpChange} />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={6}>
-                                        <FormGroup controlId="marks">
-                                            <ControlLabel>{IntlCore.t("builder", "marks")}</ControlLabel>
-                                            <FormControl 
-                                                scale="small"
-                                                value={this.state.markers} 
-                                                title={IntlCore.t("builder", "marks_hint")}
-                                                onChange={this.onMarkChange} />
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <div className="pos-castle">
-                                <div><strong>{IntlCore.t("chess", "castle")}</strong></div>
-                                <Row>
-                                    <Col md={6}>
-                                        <div className="color-group">
-                                            <label>{IntlCore.t("chess", "white")}</label>
-                                            <Row>
-                                                <Col xs={5}>
-                                                    <Checkbox 
-                                                        id ="wck"
-                                                        value={Piece.WKing.toString()} 
-                                                        onChangeState={changeCastle} 
-                                                        checked={this.hasCastle(Color.White, Castle.KSide)}>{Castle.K}</Checkbox>
-                                                </Col>
-                                                <Col xs={7}>
-                                                    <Checkbox 
-                                                        id ="wcq"
-                                                        value={Piece.WQueen.toString()} 
-                                                        onChangeState={changeCastle} 
-                                                        checked={this.hasCastle(Color.White, Castle.QSide)}>{Castle.Q}</Checkbox>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    </Col>
-                                    <Col md={6}>
-                                        <div className="color-group">
-                                            <label>{IntlCore.t("chess", "black")}</label>
-                                            <Row>
-                                                <Col xs={5}>
-                                                    <Checkbox 
-                                                        id ="bck"
-                                                        value={Piece.BKing.toString()} 
-                                                        onChangeState={changeCastle} 
-                                                        checked={this.hasCastle(Color.Black, Castle.KSide)}>{Castle.K}</Checkbox>
-                                                </Col>
-                                                <Col xs={7}>
-                                                    <Checkbox 
-                                                        id ="bcq"
-                                                        value={Piece.BQueen.toString()} 
-                                                        onChangeState={changeCastle} 
-                                                        checked={this.hasCastle(Color.Black, Castle.QSide)}>{Castle.Q}</Checkbox>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    </Col>
-                                </Row>                                
-                            </div>
-                            <div className="pos-display">
-                                <Row>
-                                    <Col md={3} sm={6}>
-                                        <Checkbox 
-                                            id ="flip" 
-                                            value="1" 
-                                            onChangeState={flipBoard} 
-                                            checked={flip}>{IntlCore.t("builder", "display_flip")}</Checkbox>
-                                    </Col>
-                                    <Col md={3} sm={6}>
-                                        <Checkbox 
-                                            id ="coords" 
-                                            value="1" 
-                                            onChangeState={setCoords} 
-                                            checked={coords}>{IntlCore.t("builder", "display_coord")}</Checkbox>
-                                    </Col>
-                                    <Col md={3} sm={6}>
-                                        <Checkbox 
-                                            id ="frame" 
-                                            value="1" 
-                                            onChangeState={setFrame} 
-                                            checked={frame}>{IntlCore.t("builder", "display_frame")}</Checkbox>
-                                    </Col>
-                                    <Col md={3} sm={6}>
-                                        <Checkbox 
-                                            id ="turn" 
-                                            value="1" 
-                                            onChangeState={setMoveTurn} 
-                                            checked={moveturn}>{IntlCore.t("builder", "display_moveturn")}</Checkbox>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                        <ChessDragLayer size={size} />
                     </Col>
                 </Row>
             </div>

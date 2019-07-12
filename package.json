@@ -1,6 +1,6 @@
 {
   "name": "onix-position-setup",
-  "version": "1.4.18",
+  "version": "1.5.19",
   "description": "Chess position constructor",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,8 +34,8 @@
     "onix-chess-ctrls": "^1.3.19",
     "onix-core": "^1.6.41",
     "onix-io": "^2.7.24",
-    "onix-ui": "^1.5.40",
     "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.9",
     "react-dnd": "^5.0.0",
     "react-dom": "^16.8.6",
     "redux": "^4.0.4",
@@ -49,7 +49,7 @@
     "@types/react-dom": "^16.8.4",
     "clean-webpack-plugin": "^0.1.19",
     "ts-loader": "^4.5.0",
-    "typescript": "^2.9.2",
+    "typescript": "^3.0.0",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5"
   }

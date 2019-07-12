@@ -1,5 +1,6 @@
 import toSafeInteger from 'lodash-es/toSafeInteger';
 import * as React from 'react';
+import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container } from 'react-bootstrap';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Intl as IntlCore } from 'onix-core';
@@ -7,11 +8,13 @@ import { onixPostMessage } from 'onix-io';
 import { pushif } from 'onix-core';
 import { Color, Castle, Piece, Square, IOpeningPosition } from 'onix-chess';
 import { BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
-import { Row, Col, Button, FormGroup, FormControl, ControlLabel, Checkbox, TextWithCopy } from 'onix-ui';
+// import { TextWithCopy } from 'onix-ui';
 import { SizeSelector, PieceSelector, SquareSelector, WhoMoveSelector, StartPosSelector } from 'onix-chess-ctrls';
 import { PositionStore } from './PositionStore';
 import { ChessHolder } from './ChessHolder';
 import { Intl } from '../Intl';
+import { TextWithCopy } from '../TextWithCopy';
+import { from } from 'rxjs';
 
 export interface DumbPositionProps {
     store?: PositionStore,
@@ -64,6 +67,41 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
             ...state,
             ep_target: e.target.value
         });
+    }
+
+    private onCastleChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { changeCastle } = this.props;
+        if (changeCastle) {
+            changeCastle(e.target.checked, e.target.value);
+        }
+    }
+
+    private onFlipChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { flipBoard } = this.props;
+        if (flipBoard) {
+            flipBoard(e.target.checked);
+        }
+    }
+
+    private onCoordsChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { setCoords } = this.props;
+        if (setCoords) {
+            setCoords(e.target.checked);
+        }
+    }
+
+    private onFrameChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { setFrame } = this.props;
+        if (setFrame) {
+            setFrame(e.target.checked);
+        }
+    }
+
+    private onTurnChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { setMoveTurn } = this.props;
+        if (setMoveTurn) {
+            setMoveTurn(e.target.checked);
+        }
     }
 
     private hasCastle? = (color: number, side: Castle) => {
@@ -153,13 +191,13 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
 
             return (dialog) ? (
                 <Row>
-                    <Col md={12}><Button block={true} state="primary" onClick={executeDialog}>{IntlCore.t("builder", "paste_forum_code")}</Button></Col>
+                    <Col md={12}><Button block={true} variant="primary" onClick={executeDialog}>{IntlCore.t("builder", "paste_forum_code")}</Button></Col>
                 </Row>
             ) : null;
         }
 
         return (
-            <div className="pos-builder">
+            <Container className="pos-builder">
                 <Row>
                     <Col md={12}>
                         <div className="d-block d-lg-flex">
@@ -181,24 +219,24 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="fen">
-                                                <ControlLabel>{IntlCore.t("chess", "fen")}</ControlLabel>
-                                                <TextWithCopy value={fen} scale="small" placeholder={IntlCore.t("chess", "fen")} />
+                                                <FormLabel>{IntlCore.t("chess", "fen")}</FormLabel>
+                                                <TextWithCopy value={fen} size="sm" placeholder={IntlCore.t("chess", "fen")} />
                                             </FormGroup>    
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="image_link">
-                                                <ControlLabel>{IntlCore.t("builder", "image_link")}</ControlLabel>
-                                                <TextWithCopy value={makeLink()} scale="small" placeholder={IntlCore.t("builder", "image_link")} />
+                                                <FormLabel>{IntlCore.t("builder", "image_link")}</FormLabel>
+                                                <TextWithCopy value={makeLink()} size="sm" placeholder={IntlCore.t("builder", "image_link")} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="forum_code">
-                                                <ControlLabel>{IntlCore.t("builder", "forum_code")}</ControlLabel>
-                                                <TextWithCopy value={makeCode()} scale="small" placeholder={IntlCore.t("builder", "forum_code")} />
+                                                <FormLabel>{IntlCore.t("builder", "forum_code")}</FormLabel>
+                                                <TextWithCopy value={makeCode()} size="sm" placeholder={IntlCore.t("builder", "forum_code")} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -208,19 +246,19 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                     <Row>
                                         <Col md={4}>
                                         <FormGroup controlId="size">
-                                                <ControlLabel>{IntlCore.t("chess", "size")}</ControlLabel>
+                                                <FormLabel>{IntlCore.t("chess", "size")}</FormLabel>
                                                 <SizeSelector defaultSize={size} onChangeSize={resize} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="piece">
-                                                <ControlLabel>{IntlCore.t("chess", "pieces")}</ControlLabel>
+                                                <FormLabel>{IntlCore.t("chess", "pieces")}</FormLabel>
                                                 <PieceSelector defaultPiece={piece} onChangePiece={setPieces} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="square">
-                                                <ControlLabel>{IntlCore.t("chess", "squares")}</ControlLabel>
+                                                <FormLabel>{IntlCore.t("chess", "squares")}</FormLabel>
                                                 <SquareSelector defaultSquare={square} onChangeSquare={setSquares} />
                                             </FormGroup>
                                         </Col>
@@ -231,13 +269,13 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                     <Row>
                                         <Col md={8} sm={12}>
                                             <FormGroup controlId="startpos">
-                                                <ControlLabel srOnly={true}>{IntlCore.t("chess-ctrls", "position_label")}</ControlLabel>
+                                                <FormLabel srOnly={true}>{IntlCore.t("chess-ctrls", "position_label")}</FormLabel>
                                                 <StartPosSelector fen={fen} openingsPos={openingsPos} onChange={this.onStartChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4} sm={12}>
                                             <FormGroup controlId="who_move">
-                                                <ControlLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</ControlLabel>
+                                                <FormLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</FormLabel>
                                                 <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={changeColor} />
                                             </FormGroup>
                                         </Col>
@@ -249,15 +287,18 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                     <Row>
                                         <Col md={3} sm={6}>
                                             <FormGroup controlId="moveNo">
-                                                <ControlLabel>{IntlCore.t("chess", "move_no")}</ControlLabel>
-                                                <FormControl scale="small" value={position.getMoveNo()} onChange={this.changeMoveNo} />
+                                                <FormLabel>{IntlCore.t("chess", "move_no")}</FormLabel>
+                                                <FormControl 
+                                                    size="sm" 
+                                                    value={position.getMoveNo().toString()} 
+                                                    onChange={this.changeMoveNo} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={3} sm={6}>
                                             <FormGroup controlId="epTarget">
-                                                <ControlLabel>{IntlCore.t("chess", "ep_target")}</ControlLabel>
+                                                <FormLabel>{IntlCore.t("chess", "ep_target")}</FormLabel>
                                                 <FormControl 
-                                                    scale="small"
+                                                    size="sm"
                                                     value={this.state.ep_target} 
                                                     title={IntlCore.t("builder", "ep_target_hint")} 
                                                     onChange={this.onEpChange} />
@@ -265,9 +306,9 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup controlId="marks">
-                                                <ControlLabel>{IntlCore.t("builder", "marks")}</ControlLabel>
+                                                <FormLabel>{IntlCore.t("builder", "marks")}</FormLabel>
                                                 <FormControl 
-                                                    scale="small"
+                                                    size="sm"
                                                     value={this.state.markers} 
                                                     title={IntlCore.t("builder", "marks_hint")}
                                                     onChange={this.onMarkChange} />
@@ -284,18 +325,22 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                                 <label>{IntlCore.t("chess", "white")}</label>
                                                 <Row>
                                                     <Col xs={5}>
-                                                        <Checkbox 
+                                                        <FormCheck 
                                                             id ="wck"
-                                                            value={Piece.WKing.toString()} 
-                                                            onChangeState={changeCastle} 
-                                                            checked={this.hasCastle(Color.White, Castle.KSide)}>{Castle.K}</Checkbox>
+                                                            type="checkbox"
+                                                            value={Piece.WKing.toString()}
+                                                            onChange={this.onCastleChange}
+                                                            defaultChecked={this.hasCastle(Color.White, Castle.KSide)}
+                                                            label={Castle.K} />
                                                     </Col>
                                                     <Col xs={7}>
-                                                        <Checkbox 
+                                                        <FormCheck 
                                                             id ="wcq"
+                                                            type="checkbox"
                                                             value={Piece.WQueen.toString()} 
-                                                            onChangeState={changeCastle} 
-                                                            checked={this.hasCastle(Color.White, Castle.QSide)}>{Castle.Q}</Checkbox>
+                                                            onChange={this.onCastleChange} 
+                                                            defaultChecked={this.hasCastle(Color.White, Castle.QSide)}
+                                                            label={Castle.Q} />
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -305,18 +350,22 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                                 <label>{IntlCore.t("chess", "black")}</label>
                                                 <Row>
                                                     <Col xs={5}>
-                                                        <Checkbox 
+                                                        <FormCheck 
                                                             id ="bck"
+                                                            type="checkbox"
                                                             value={Piece.BKing.toString()} 
-                                                            onChangeState={changeCastle} 
-                                                            checked={this.hasCastle(Color.Black, Castle.KSide)}>{Castle.K}</Checkbox>
+                                                            onChange={this.onCastleChange} 
+                                                            defaultChecked={this.hasCastle(Color.Black, Castle.KSide)}
+                                                            label={Castle.K} />
                                                     </Col>
                                                     <Col xs={7}>
-                                                        <Checkbox 
+                                                        <FormCheck 
                                                             id ="bcq"
+                                                            type="checkbox"
                                                             value={Piece.BQueen.toString()} 
-                                                            onChangeState={changeCastle} 
-                                                            checked={this.hasCastle(Color.Black, Castle.QSide)}>{Castle.Q}</Checkbox>
+                                                            onChange={this.onCastleChange} 
+                                                            defaultChecked={this.hasCastle(Color.Black, Castle.QSide)}
+                                                            label={Castle.Q} />
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -326,32 +375,40 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                                 <div className="pos-display">
                                     <Row>
                                         <Col md={3} sm={6}>
-                                            <Checkbox 
+                                            <FormCheck 
                                                 id ="flip" 
+                                                type="checkbox"
                                                 value="1" 
-                                                onChangeState={flipBoard} 
-                                                checked={flip}>{IntlCore.t("builder", "display_flip")}</Checkbox>
+                                                onChange={this.onFlipChange} 
+                                                defaultChecked={flip}
+                                                label={IntlCore.t("builder", "display_flip")} />
                                         </Col>
                                         <Col md={3} sm={6}>
-                                            <Checkbox 
+                                            <FormCheck 
                                                 id ="coords" 
+                                                type="checkbox"
                                                 value="1" 
-                                                onChangeState={setCoords} 
-                                                checked={coords}>{IntlCore.t("builder", "display_coord")}</Checkbox>
+                                                onChange={this.onCoordsChange} 
+                                                defaultChecked={coords}
+                                                label={IntlCore.t("builder", "display_coord")} />
                                         </Col>
                                         <Col md={3} sm={6}>
-                                            <Checkbox 
+                                            <FormCheck 
                                                 id ="frame" 
+                                                type="checkbox"
                                                 value="1" 
-                                                onChangeState={setFrame} 
-                                                checked={frame}>{IntlCore.t("builder", "display_frame")}</Checkbox>
+                                                onChange={this.onFrameChange} 
+                                                defaultChecked={frame}
+                                                label={IntlCore.t("builder", "display_frame")} />
                                         </Col>
                                         <Col md={3} sm={6}>
-                                            <Checkbox 
+                                            <FormCheck 
                                                 id ="turn" 
+                                                type="checkbox"
                                                 value="1" 
-                                                onChangeState={setMoveTurn} 
-                                                checked={moveturn}>{IntlCore.t("builder", "display_moveturn")}</Checkbox>
+                                                onChange={this.onTurnChange} 
+                                                defaultChecked={moveturn}
+                                                label={IntlCore.t("builder", "display_moveturn")} />
                                         </Col>
                                     </Row>
                                 </div>
@@ -360,7 +417,7 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
                         </div>
                     </Col>
                 </Row>
-            </div>
+            </Container>
         );
     }
 }

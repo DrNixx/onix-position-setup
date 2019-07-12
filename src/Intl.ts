@@ -29,6 +29,7 @@ export class Intl {
                     display_moveturn: "Очередь хода",
                     marks: "Маркеры",
                     marks_hint: "Для установки маркеров укажите наименования клеток или ходов через запятую (например e2-e4,d5,h4)",
+                    copy_to_clipboard: "Копировать в буфер обмена",
                 },
 
                 'en-us': {
@@ -48,6 +49,7 @@ export class Intl {
                     display_moveturn: "Move turn",
                     marks: "Markers",
                     marks_hint: "Entry square or move names for marks (example e2-e4,d5,h4)",
+                    copy_to_clipboard: "Copy to clipboard",
                 }
             });
 

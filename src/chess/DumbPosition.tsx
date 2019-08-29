@@ -8,13 +8,14 @@ import { onixPostMessage } from 'onix-io';
 import { pushif } from 'onix-core';
 import { Color, Castle, Piece, Square, IOpeningPosition } from 'onix-chess';
 import { BoardSize, Orientation, ChessBoard, ChessDragLayer } from 'onix-board';
-// import { TextWithCopy } from 'onix-ui';
 import { SizeSelector, PieceSelector, SquareSelector, WhoMoveSelector, StartPosSelector } from 'onix-chess-ctrls';
 import { PositionStore } from './PositionStore';
 import { ChessHolder } from './ChessHolder';
 import { Intl } from '../Intl';
 import { TextWithCopy } from '../TextWithCopy';
 import { from } from 'rxjs';
+import { Chessground } from 'chessground'
+import { Api } from 'chessground/api';
 
 export interface DumbPositionProps {
     store?: PositionStore,
@@ -43,6 +44,10 @@ export interface DumbPositionState {
 
 @DragDropContext(HTML5Backend)
 export class DumbPosition extends React.Component<DumbPositionProps, DumbPositionState> {
+
+    boardElement: HTMLDivElement;
+    cg: Api;
+
     constructor(props: DumbPositionProps) {
         super(props);
 
@@ -53,6 +58,18 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
             ep_target: this.epName(state.board.position.EpTarget),
             markers: state.board.markers,
         } 
+    }
+
+    componentDidMount() {
+        this.cg = Chessground(this.boardElement, {});
+    }
+    
+    componentWillReceiveProps(nextProps) {
+        // this.cg.set(this.buildConfigFromProps(nextProps))
+    }
+    
+    componentWillUnmount() {
+        this.cg.destroy()
     }
 
     private onEpChange? = (e) => {
@@ -197,21 +214,17 @@ export class DumbPosition extends React.Component<DumbPositionProps, DumbPositio
         }
 
         return (
-            <Container className="pos-builder">
+            <Container className="pos-builder blue">
                 <Row>
                     <Col md={12}>
                         <div className="d-block d-lg-flex">
-                            <div className="board-container">
+                            <div className="board-container merida">
                                 <div className="holder-container">
                                     <ChessHolder 
                                         store={this.props.store}
                                         orient={Orientation.Horizontal} />
                                 </div>
-                                <ChessBoard
-                                    store={this.props.store}
-                                    dnd={true}
-                                    legal={false}
-                                />
+                                <div className="main-board" ref={el => this.boardElement = el} />
                                 {renderDialogButton()}
                             </div>
                             <div className="controls flex-grow-1">

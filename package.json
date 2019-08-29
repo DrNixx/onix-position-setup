@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/DrNixx/onix-position-setup#readme",
   "dependencies": {
+    "chessground": "^7.6.10",
     "lodash-es": "^4.17.14",
     "onix-app": "^1.6.23",
     "onix-board": "^1.5.33",

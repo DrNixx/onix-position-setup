@@ -1,71 +1,103 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Unsubscribe } from 'redux';
 import { ajax } from 'rxjs/ajax';
-import { Color, Castle, FenStandartStart, Piece, Square, Position, IOpeningPosition } from 'onix-chess';
+import { Color, Castle, FenStandartStart, Piece, Square, IOpeningPosition } from 'onix-chess';
 import { DumbPosition } from './DumbPosition';
-import { createPositionStore, PositionState, PositionStore } from './PositionStore';
-import { BoardSize, BoardSettings, BoardActions, BoardActionConsts as bac } from 'onix-board';
+import * as cg from 'chessground/types'
+import { Chessground } from 'chessground'
+import { Api } from 'chessground/api';
+
+export const BoardSizeClass: string[] = ["size1", "size1", "size2", "size3", "size4", "size5", "size6"];
+
+/**
+ * Размеры доски
+ */
+export enum BoardSize {
+    None = 0,
+    Tiny = 1,
+    Small = 2,
+    Smallest = 3,
+    Normal = 4,
+    Largest = 5,
+    Large = 6
+}
 
 export interface PosBuilderProps {
-    board: BoardSettings,
     locale?: string,
     url?: string,
     dialog?: boolean,
+
+    fen?: string,
+
+    orientation?: cg.Color,
+    whoMove?: boolean,
+    coordinates?: boolean,
+
+    size: BoardSize,
+    piece?: string,
+    square?: string,
+    markers?: string,
 }
 
 export interface PosBuilderState {
     openings: IOpeningPosition[],
+    fen?: string,
+    orientation?: cg.Color,
+    whoMove?: boolean,
+    coordinates?: boolean,
+    castles?: number[],
+    size: BoardSize,
+    piece?: string,
+    square?: string,
+    markers?: string,
 }
 
 export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState> {
-    private store: PositionStore;
-    private storeUnsubscribe: Unsubscribe;
+    public static defaultProps: PosBuilderProps = {
+        locale: 'ru-ru',
+        url: 'https://www.chess-online.com/fen.png',
+        dialog: false,
+
+        fen: FenStandartStart,
+
+        orientation: 'white',
+        whoMove: false,
+        coordinates: true,
+
+        size: BoardSize.Normal,
+        piece: 'merida',
+        square: 'blue',
+        markers: '',
+    }
+
+    private boardElement: HTMLDivElement;
+
+    private cg: Api;
+
     private posMap: string[] = [];
     private r = new RegExp(/(.*)\s\d{1,2}\s\d{1,2}$/);
 
     constructor(props: PosBuilderProps) {
         super(props);
 
-        const { locale, board } = this.props;
-        const { size, piece, square, flip, coords, frame, fen, markers } = board;
-        const { doMove } = this;
-        const fena = fen || FenStandartStart;
+        const { locale, url, dialog, fen, orientation, whoMove, coordinates, size, piece, square, markers } = this.props;
         
-        this.store = createPositionStore({
-            intl: {
-                locale: locale
-            },
-            board: {
-                size: size || BoardSize.Normal,
-                piece: piece || "merida",
-                square: square || "color-blue",
-                flip: !!flip,
-                coords: (typeof coords !== "undefined") ? !!coords : true,
-                frame: (typeof frame !== "undefined") ? !!frame : true,
-                moveturn: true,
-                position: new Position(fena),
-                fen: fena,
-                markers: markers,
-                selection: {
-                    from: {
-                        piece: Piece.NoPiece,
-                        square: Square.NullSquare
-                    }
-                },
-                doMove: doMove
-            }
-        });
-
         this.state = {
-            openings: []
+            openings: [],
+            fen: fen,
+            orientation: orientation,
+            coordinates: coordinates,
+            whoMove: whoMove,
+            castles: [],
+            size: size,
+            piece: piece,
+            square: square,
+            markers: markers,
         };
     }
 
     componentDidMount() {
-        this.storeUnsubscribe = this.store.subscribe(() =>
-            this.forceUpdate()
-        );
+        this.cg = Chessground(this.boardElement, {});
 
         if (process.env.NODE_ENV === 'production') {
             const ajaxCallback = this.ajaxCallback;
@@ -77,9 +109,9 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                 );
         }
     }
-
+        
     componentWillUnmount() {
-        this.storeUnsubscribe();
+        this.cg.destroy()
     }
 
     private getNormFen(fen: string) {
@@ -207,18 +239,11 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         return fen;
     }
 
-    private getPosition = () => {
-        const state: PositionState = this.store.getState();
-        return state.board.position;
-    }
-
     render() {
-        const state: PositionState = this.store.getState();
         const { openings } = this.state;
 
         return (
             <DumbPosition 
-                store={this.store}
                 url={this.props.url || "https://www.chess-online.com/fen.png"}
                 dialog={this.props.dialog}
                 openingsPos={openings}

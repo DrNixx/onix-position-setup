@@ -1,10 +1,11 @@
+import toSafeInteger from 'lodash-es/toSafeInteger';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container } from 'react-bootstrap';
 import { ajax } from 'rxjs/ajax';
 import { pushif } from 'onix-core';
 import { onixPostMessage } from 'onix-io';
-import { Color, Castle, FenStandartStart, Piece, Square, IOpeningPosition } from 'onix-chess';
+import { Color, Castle, FenStandartStart, Piece, Square, IOpeningPosition, Position } from 'onix-chess';
 import { TextWithCopy } from '../TextWithCopy';
 import { Intl as IntlCore } from 'onix-core';
 import { Intl } from '../Intl';
@@ -27,7 +28,6 @@ export interface PosBuilderProps {
 
     orientation?: cg.Color,
     moveTurn?: boolean,
-    whoMove?: cg.Color,
     coordinates?: boolean,
 
     size: BoardSize,
@@ -42,11 +42,13 @@ export interface PosBuilderState {
     orientation?: cg.Color,
     moveTurn?: boolean,
     whoMove?: cg.Color,
+    moveNo?: number,
     coordinates?: boolean,
     castles?: number[],
     size: BoardSize,
     piece?: string,
     square?: string,
+    ep_target?: string,
     markers?: string,
 }
 
@@ -60,7 +62,6 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         orientation: 'white',
         moveTurn: false,
-        whoMove: 'white',
         coordinates: true,
 
         size: BoardSize.Normal,
@@ -74,12 +75,17 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     private cg: Api;
 
     private posMap: string[] = [];
+
     private r = new RegExp(/(.*)\s\d{1,2}\s\d{1,2}$/);
+
+    private position: Position;
 
     constructor(props: PosBuilderProps) {
         super(props);
 
         const { locale, url, dialog, fen, orientation, moveTurn, coordinates, size, piece, square, markers } = this.props;
+
+        this.position = new Position(fen || FenStandartStart );
         
         this.state = {
             openings: [],
@@ -87,10 +93,12 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             orientation: orientation,
             coordinates: coordinates,
             moveTurn: moveTurn,
+            moveNo: this.position.getMoveNo(),
             castles: [],
             size: size,
             piece: piece,
             square: square,
+            ep_target: this.epName(this.position.EpTarget),
             markers: markers,
         };
     }
@@ -113,6 +121,10 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         this.cg.destroy()
     }
 
+    private epName? = (ep: number) => {
+        return (ep !== Square.NullSquare) ? Square.squareName(ep) : '';
+    }
+
     private getNormFen(fen: string) {
         let keys = this.r.exec(fen);
         return keys[1] || fen;
@@ -133,21 +145,21 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         });
     }
 
-    private resize = (size: BoardSize) => {
+    private onSizeChange? = (size: BoardSize) => {
         this.setState({
             ...this.state,
             size: size
         });
     }
 
-    private setPieces = (piece: string) => {
+    private onPieceChange? = (piece: string) => {
         this.setState({
             ...this.state,
             piece: piece
         });
     }
 
-    private setSquares = (square: string) => {
+    private onSquareChange? = (square: string) => {
         this.setState({
             ...this.state,
             square: square
@@ -158,10 +170,29 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         this.changeStart(fen);
     }
 
-    private changeColor = (color: cg.Color) => {
+    private onMoverChange? = (color: cg.Color) => {
+        this.position.WhoMove = color == 'black' ? Color.Black : Color.White;
+
         this.setState({
             ...this.state,
             whoMove: color
+        });
+    }
+
+    private onMoveNoChange? = (e) => {
+        const n = toSafeInteger(e.target.value);
+        this.position.setMoveNo(n);
+        this.setState({
+            ...this.state,
+            moveNo: n
+        });
+    }
+
+    private onEpChange? = (e) => {
+        this.position.EpTarget = Square.parse(e.target.value);
+        this.setState({
+            ...this.state,
+            ep_target: e.target.value
         });
     }
 
@@ -206,14 +237,6 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         }
     }
 
-    private changeMoveNo = (move: number) => {
-        this.store.dispatch({ type: bac.SET_MOVENO, move: move } as BoardActions.BoardAction);
-    }
-
-    private changeEp = (sq: number) => {
-        this.store.dispatch({ type: bac.SET_EP, ep_target: sq } as BoardActions.BoardAction);
-    }
-
     private changeStart? = (fen: string) => {
         if (fen) {
             this.changeFen(fen);
@@ -256,7 +279,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     render() {
         const { dialog } = this.props;
-        const { fen, openings, size, orientation, moveTurn, whoMove, coordinates, piece, square, markers } = this.state;
+        const { fen, openings, size, orientation, moveTurn, whoMove, moveNo, coordinates, piece, square, markers } = this.state;
+        const { position } = this;
 
         let params = [];
 
@@ -353,19 +377,19 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                         <Col md={4}>
                                             <FormGroup controlId="size">
                                                 <FormLabel>{IntlCore.t("chess", "size")}</FormLabel>
-                                                <SizeSelector defaultSize={size} onChangeSize={this.resize} />
+                                                <SizeSelector defaultSize={size} onChangeSize={this.onSizeChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="piece">
                                                 <FormLabel>{IntlCore.t("chess", "pieces")}</FormLabel>
-                                                <PieceSelector defaultPiece={piece} onChangePiece={this.setPieces} />
+                                                <PieceSelector defaultPiece={piece} onChangePiece={this.onPieceChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="square">
                                                 <FormLabel>{IntlCore.t("chess", "squares")}</FormLabel>
-                                                <SquareSelector defaultSquare={square} onChangeSquare={this.setSquares} />
+                                                <SquareSelector defaultSquare={square} onChangeSquare={this.onSquareChange} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -382,7 +406,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                         <Col md={4} sm={12}>
                                             <FormGroup controlId="who_move">
                                                 <FormLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</FormLabel>
-                                                <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={this.changeColor} />
+                                                <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={this.onMoverChange} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -396,8 +420,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                                 <FormLabel>{IntlCore.t("chess", "move_no")}</FormLabel>
                                                 <FormControl 
                                                     size="sm" 
-                                                    value={position.getMoveNo().toString()} 
-                                                    onChange={this.changeMoveNo} />
+                                                    value={moveNo.toString()} 
+                                                    onChange={this.onMoveNoChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={3} sm={6}>

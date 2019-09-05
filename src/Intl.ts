@@ -1,6 +1,4 @@
 import { Intl as IntlCore } from 'onix-core';
-import { Intl as IntlBoard } from 'onix-board';
-import { Intl as IntlCtrl } from 'onix-chess-ctrls';
 
 export class Intl {
     private static intlInitialized = false;
@@ -8,8 +6,7 @@ export class Intl {
     public static register() {
         if (!Intl.intlInitialized) {
             
-            IntlBoard.register();
-            IntlCtrl.register();
+            IntlCore.register();
 
             IntlCore.registerStrings('builder', {
                 'ru-ru': {
@@ -30,6 +27,10 @@ export class Intl {
                     marks: "Маркеры",
                     marks_hint: "Для установки маркеров укажите наименования клеток или ходов через запятую (например e2-e4,d5,h4)",
                     copy_to_clipboard: "Копировать в буфер обмена",
+                    position_label: "-- Позиция --",        
+                    get_fen: "Загрузить FEN",
+                    paste_fen_prompt: "Скопируйте сюда собственный FEN",
+                    popular_opening: "Популярные дебюты",
                 },
 
                 'en-us': {
@@ -50,6 +51,10 @@ export class Intl {
                     marks: "Markers",
                     marks_hint: "Entry square or move names for marks (example e2-e4,d5,h4)",
                     copy_to_clipboard: "Copy to clipboard",
+                    position_label: "-- Position --",
+                    get_fen: "Custom position",
+                    paste_fen_prompt: "Paste FEN position",
+                    popular_opening: "Popular openings"
                 }
             });
 

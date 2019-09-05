@@ -1,4 +1,5 @@
 import toSafeInteger from 'lodash-es/toSafeInteger';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container } from 'react-bootstrap';
@@ -12,12 +13,15 @@ import { Intl } from '../Intl';
 import * as cg from 'chessground/types';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
+import { Config } from 'chessground/config';
 import { SizeSelector } from '../SizeSelector';
 import { PieceSelector } from '../PieceSelector';
 import { SquareSelector } from '../SquareSelector';
 import { StartPosSelector } from '../StartPosSelector';
 import { WhoMoveSelector } from '../WhoMoveSelector';
-import { BoardSize } from '../Size';
+import { BoardSize, BoardSizeClass } from '../Size';
+
+const _ = IntlCore.t;
 
 export interface PosBuilderProps {
     locale?: string,
@@ -62,7 +66,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         orientation: 'white',
         moveTurn: false,
-        coordinates: true,
+        coordinates: false,
 
         size: BoardSize.Normal,
         piece: 'merida',
@@ -72,7 +76,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     private boardElement: HTMLDivElement;
 
-    private cg: Api;
+    private cg: Api = undefined;
 
     private posMap: string[] = [];
 
@@ -82,6 +86,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     constructor(props: PosBuilderProps) {
         super(props);
+
+        Intl.register();
 
         const { locale, url, dialog, fen, orientation, moveTurn, coordinates, size, piece, square, markers } = this.props;
 
@@ -104,7 +110,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     }
 
     componentDidMount() {
-        this.cg = Chessground(this.boardElement, {});
+        this.cg = Chessground(this.boardElement, this.buildCgConfig());
 
         if (process.env.NODE_ENV === 'production') {
             const ajaxCallback = this.ajaxCallback;
@@ -121,8 +127,29 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         this.cg.destroy()
     }
 
-    private epName? = (ep: number) => {
-        return (ep !== Square.NullSquare) ? Square.squareName(ep) : '';
+    private buildCgConfig = () => {
+        const { state, position, onPositionChange, onDropPiece } = this;
+
+        const config: Config = {
+            fen: position.writeFEN(),
+            orientation: state.orientation,
+            turnColor: position.WhoMove == Color.Black ? 'black' : 'white',
+            coordinates: true,
+            events: {
+                change: onPositionChange,
+                dropNewPiece: onDropPiece
+            }
+        };
+        
+        return config
+    }
+
+    private onPositionChange = () => {
+
+    }
+
+    private onDropPiece = (piece: cg.Piece, key: cg.Key) => {
+
     }
 
     private getNormFen(fen: string) {
@@ -131,6 +158,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     }
 
     private ajaxCallback = (data?: any) => {
+        const { state } = this;
+
         let openings: IOpeningPosition[] = [];
         for (var i = 0; i < data.length; i++) {
             const option = data[i];
@@ -140,147 +169,171 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         }
         
         this.setState({
-            ...this.state,
+            ...state,
             openings: openings
         });
     }
 
     private onSizeChange? = (size: BoardSize) => {
+        const { state } = this;
         this.setState({
-            ...this.state,
+            ...state,
             size: size
         });
     }
 
     private onPieceChange? = (piece: string) => {
+        const { state } = this;
         this.setState({
-            ...this.state,
+            ...state,
             piece: piece
         });
     }
 
     private onSquareChange? = (square: string) => {
+        const { state } = this;
         this.setState({
-            ...this.state,
+            ...state,
             square: square
         });
     }
 
     private onStartChange? = (fen) => {
-        this.changeStart(fen);
+        const { state, position, cg, buildCgConfig } = this;
+
+        position.readFromFEN(fen);
+        cg.set(buildCgConfig());
+
+        this.setState({
+            ...state,
+            fen: fen
+        });
     }
 
     private onMoverChange? = (color: cg.Color) => {
-        this.position.WhoMove = color == 'black' ? Color.Black : Color.White;
+        const { state, position, cg } = this;
+        position.WhoMove = color == 'black' ? Color.Black : Color.White;
 
         this.setState({
-            ...this.state,
+            ...state,
             whoMove: color
         });
     }
 
     private onMoveNoChange? = (e) => {
+        const { state, position } = this;
         const n = toSafeInteger(e.target.value);
         this.position.setMoveNo(n);
         this.setState({
-            ...this.state,
+            ...state,
             moveNo: n
         });
     }
 
+    private epName? = (ep: number) => {
+        return (ep !== Square.NullSquare) ? Square.squareName(ep) : '';
+    }
+
     private onEpChange? = (e) => {
-        this.position.EpTarget = Square.parse(e.target.value);
+        const { state, position } = this;
+
+        position.EpTarget = Square.parse(e.target.value);
         this.setState({
-            ...this.state,
-            ep_target: e.target.value
+            ...state,
+            fen: position.writeFEN(),
+            ep_target: this.epName(position.EpTarget)
         });
     }
 
-    private flipBoard = (flag: boolean) => {
-        this.store.dispatch({ type: bac.FLIP_BOARD, flag: flag } as BoardActions.BoardAction);
+    private onMarkChange? = (e) => {
+        const { state } = this;
+        
+        this.setState({
+            ...state,
+            markers: e.target.value
+        });
     }
 
-    private setCoords = (flag: boolean) => {
-        this.store.dispatch({ type: bac.SET_COORDS, flag: flag } as BoardActions.BoardAction);
-    }
+    private onCastleChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { state, position } = this;
 
-    private setFrame = (flag: boolean) => {
-        this.store.dispatch({ type: bac.SET_FRAME, flag: flag } as BoardActions.BoardAction);
-    }
-
-    private setMoveTurn = (flag: boolean) => {
-        this.store.dispatch({ type: bac.SET_MOVETURN, flag: flag } as BoardActions.BoardAction);
-    }
-
-    private changeCastle = (flag: boolean, val: string) => {
         let color = Color.NoColor;
         let side = Castle.KSide;
-        switch (val) {
+        switch (e.target.value) {
             case "1":
-                color = Color.White; side = Castle.KSide;
+                color = Color.White; 
+                side = Castle.KSide;
                 break;
             case "2":
-                color = Color.White; side = Castle.QSide;
+                color = Color.White; 
+                side = Castle.QSide;
                 break;
             case "9":
-                color = Color.Black; side = Castle.KSide;
+                color = Color.Black; 
+                side = Castle.KSide;
                 break;
             case "10":
-                color = Color.Black; side = Castle.QSide;
+                color = Color.Black; 
+                side = Castle.QSide;
                 break;
             default:
                 break;
         }
 
-        if (color !== Color.NoColor) {
-            this.store.dispatch({ type: bac.SET_CASTLE, color: color, side: side, flag: flag } as BoardActions.BoardAction);
-        }
+        position.setCastling(color, side, e.target.checked);
+
+        this.setState({
+            ...state,
+            fen: position.writeFEN()
+        });
     }
 
-    private changeStart? = (fen: string) => {
-        if (fen) {
-            this.changeFen(fen);
-        }
+    private hasCastle? = (color: number, side: Castle) => {
+        const { position } = this;
+        return position.getCastling(color, side);
     }
 
-    private changeFen = (fen: string) => {
-        this.store.dispatch({ type: bac.SET_FEN, fen: fen } as BoardActions.BoardAction);
+    private onFlipChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { cg, state } = this;
+        const orientation = e.target.checked ? 'black' : 'white';
+        if (cg.state.orientation != orientation) {
+            cg.toggleOrientation();
+        }
+
+        this.setState({
+            ...state,
+            orientation: orientation
+        });
     }
 
-    doMove = (from: number, to: number, piece: number, position: Position) => {
-        if (from !== Square.NullSquare) {
-            piece = piece || position.getPiece(from);
-            if (!position.removePiece(piece, from)) {
-                return false;
-            }
-        }
+    private onCoordsChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { state } = this;
 
-        if (piece && to !== Square.NullSquare) {
-            const captured = position.getPiece(to)
-            if (captured !== Piece.NoPiece) {
-                position.removePiece(captured, to);
-            }
+        this.setState({
+            ...state,
+            coordinates: e.target.checked
+        });
+    }
 
-            if (!position.addPiece(piece, to)) {
-                return false;
-            }
-        }
+    private onTurnChange? = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { state } = this;
 
-        let fen = position.writeFEN();
-        const key = this.getNormFen(fen);
-        if (this.posMap[key]) {
-            if (fen !== this.posMap[key]) {
-                fen = this.posMap[key];
-            }
-        }
-
-        return fen;
+        this.setState({
+            ...state,
+            moveTurn: e.target.checked
+        });
     }
 
     render() {
-        const { dialog } = this.props;
-        const { fen, openings, size, orientation, moveTurn, whoMove, moveNo, coordinates, piece, square, markers } = this.state;
-        const { position } = this;
+        const { cg, props, state } = this;
+        const { dialog } = props;
+        const { fen, openings, size, orientation, moveTurn, whoMove, moveNo, coordinates, piece, square, markers } = state;
+
+        const flipped = orientation != 'white';
+
+        if (cg !== undefined) {
+            cg.set(this.buildCgConfig());
+        }
 
         let params = [];
 
@@ -289,7 +342,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         pushif(params, moveTurn, ['who', 1]);
 		pushif(params, !coordinates, ['hl', 1]);
         pushif(params, (piece !== 'merida'), ['pset', encodeURIComponent(piece)]);
-        pushif(params, (square !== 'color-blue'), ['sset', encodeURIComponent(square)]);
+        pushif(params, (square !== 'blue'), ['sset', encodeURIComponent(square)]);
         pushif(params, !!markers, ['mv', markers])
 
 		const makeLink = () => {
@@ -327,19 +380,27 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
             return (dialog) ? (
                 <Row>
-                    <Col md={12}><Button block={true} variant="primary" onClick={executeDialog}>{IntlCore.t("builder", "paste_forum_code")}</Button></Col>
+                    <Col md={12}><Button block={true} variant="primary" onClick={executeDialog}>{_("builder", "paste_forum_code")}</Button></Col>
                 </Row>
             ) : null;
         }
 
+        let containerClass = ['pos-builder'];
+        containerClass.push(square);
+        containerClass.push(BoardSizeClass[size]);
+
+        if (!coordinates) {
+            containerClass.push('no-coords');
+        }
+        
         return (
-            <Container className="pos-builder blue">
+            <Container className={classNames(containerClass)}>
                 <Row>
                     <Col md={12}>
                         <div className="d-block d-lg-flex">
-                            <div className="board-container merida">
+                            <div className={classNames('board-container', piece)}>
                                 <div className="holder-container">
-                                    <ChessHolder store={this.props.store} orient={Orientation.Horizontal} />
+                                    
                                 </div>
                                 <div className="main-board" ref={el => this.boardElement = el} />
                                 {renderDialogButton()}
@@ -349,24 +410,24 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="fen">
-                                                <FormLabel>{IntlCore.t("chess", "fen")}</FormLabel>
-                                                <TextWithCopy value={fen} size="sm" placeholder={IntlCore.t("chess", "fen")} />
+                                                <FormLabel>{_("chess", "fen")}</FormLabel>
+                                                <TextWithCopy value={fen} size="sm" placeholder={_("chess", "fen")} />
                                             </FormGroup>    
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="image_link">
-                                                <FormLabel>{IntlCore.t("builder", "image_link")}</FormLabel>
-                                                <TextWithCopy value={makeLink()} size="sm" placeholder={IntlCore.t("builder", "image_link")} />
+                                                <FormLabel>{_("builder", "image_link")}</FormLabel>
+                                                <TextWithCopy value={makeLink()} size="sm" placeholder={_("builder", "image_link")} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col md={12}>
                                             <FormGroup controlId="forum_code">
-                                                <FormLabel>{IntlCore.t("builder", "forum_code")}</FormLabel>
-                                                <TextWithCopy value={makeCode()} size="sm" placeholder={IntlCore.t("builder", "forum_code")} />
+                                                <FormLabel>{_("builder", "forum_code")}</FormLabel>
+                                                <TextWithCopy value={makeCode()} size="sm" placeholder={_("builder", "forum_code")} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -376,19 +437,19 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                     <Row>
                                         <Col md={4}>
                                             <FormGroup controlId="size">
-                                                <FormLabel>{IntlCore.t("chess", "size")}</FormLabel>
+                                                <FormLabel>{_("chess", "size")}</FormLabel>
                                                 <SizeSelector defaultSize={size} onChangeSize={this.onSizeChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="piece">
-                                                <FormLabel>{IntlCore.t("chess", "pieces")}</FormLabel>
+                                                <FormLabel>{_("chess", "pieces")}</FormLabel>
                                                 <PieceSelector defaultPiece={piece} onChangePiece={this.onPieceChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="square">
-                                                <FormLabel>{IntlCore.t("chess", "squares")}</FormLabel>
+                                                <FormLabel>{_("chess", "squares")}</FormLabel>
                                                 <SquareSelector defaultSquare={square} onChangeSquare={this.onSquareChange} />
                                             </FormGroup>
                                         </Col>
@@ -399,13 +460,13 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                     <Row>
                                         <Col md={8} sm={12}>
                                             <FormGroup controlId="startpos">
-                                                <FormLabel srOnly={true}>{IntlCore.t("chess-ctrls", "position_label")}</FormLabel>
-                                                <StartPosSelector fen={fen} openingsPos={openings} onChange={this.onStartChange} />
+                                                <FormLabel srOnly={true}>{_("chess-ctrls", "position_label")}</FormLabel>
+                                                <StartPosSelector fen={fen} openingsPos={openings} onChangeFen={this.onStartChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4} sm={12}>
                                             <FormGroup controlId="who_move">
-                                                <FormLabel srOnly={true}>{IntlCore.t("chess", "who_move")}</FormLabel>
+                                                <FormLabel srOnly={true}>{_("chess", "who_move")}</FormLabel>
                                                 <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={this.onMoverChange} />
                                             </FormGroup>
                                         </Col>
@@ -413,34 +474,34 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                 </div>
 
                                 <div className="pos-params">
-                                    <div><strong>{IntlCore.t("builder", "pos_param")}</strong></div>
+                                    <div><strong>{_("builder", "pos_param")}</strong></div>
                                     <Row>
                                         <Col md={3} sm={6}>
                                             <FormGroup controlId="moveNo">
-                                                <FormLabel>{IntlCore.t("chess", "move_no")}</FormLabel>
+                                                <FormLabel>{_("chess", "move_no")}</FormLabel>
                                                 <FormControl 
                                                     size="sm" 
-                                                    value={moveNo.toString()} 
+                                                    defaultValue={moveNo.toString()} 
                                                     onChange={this.onMoveNoChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={3} sm={6}>
                                             <FormGroup controlId="epTarget">
-                                                <FormLabel>{IntlCore.t("chess", "ep_target")}</FormLabel>
+                                                <FormLabel>{_("chess", "ep_target")}</FormLabel>
                                                 <FormControl 
                                                     size="sm"
-                                                    value={this.state.ep_target} 
-                                                    title={IntlCore.t("builder", "ep_target_hint")} 
+                                                    defaultValue={this.state.ep_target} 
+                                                    title={_("builder", "ep_target_hint")} 
                                                     onChange={this.onEpChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup controlId="marks">
-                                                <FormLabel>{IntlCore.t("builder", "marks")}</FormLabel>
+                                                <FormLabel>{_("builder", "marks")}</FormLabel>
                                                 <FormControl 
                                                     size="sm"
-                                                    value={this.state.markers} 
-                                                    title={IntlCore.t("builder", "marks_hint")}
+                                                    defaultValue={this.state.markers} 
+                                                    title={_("builder", "marks_hint")}
                                                     onChange={this.onMarkChange} />
                                             </FormGroup>
                                         </Col>
@@ -448,11 +509,11 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                 </div>
 
                                 <div className="pos-castle">
-                                    <div><strong>{IntlCore.t("chess", "castle")}</strong></div>
+                                    <div><strong>{_("chess", "castle")}</strong></div>
                                     <Row>
                                         <Col md={6}>
                                             <div className="color-group">
-                                                <label>{IntlCore.t("chess", "white")}</label>
+                                                <label>{_("chess", "white")}</label>
                                                 <Row>
                                                     <Col xs={5}>
                                                         <FormCheck 
@@ -477,7 +538,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                         </Col>
                                         <Col md={6}>
                                             <div className="color-group">
-                                                <label>{IntlCore.t("chess", "black")}</label>
+                                                <label>{_("chess", "black")}</label>
                                                 <Row>
                                                     <Col xs={5}>
                                                         <FormCheck 
@@ -510,8 +571,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                                 type="checkbox"
                                                 value="1" 
                                                 onChange={this.onFlipChange} 
-                                                defaultChecked={flip}
-                                                label={IntlCore.t("builder", "display_flip")} />
+                                                defaultChecked={flipped}
+                                                label={_("builder", "display_flip")} />
                                         </Col>
                                         <Col md={3} sm={6}>
                                             <FormCheck 
@@ -519,17 +580,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                                 type="checkbox"
                                                 value="1" 
                                                 onChange={this.onCoordsChange} 
-                                                defaultChecked={coords}
-                                                label={IntlCore.t("builder", "display_coord")} />
-                                        </Col>
-                                        <Col md={3} sm={6}>
-                                            <FormCheck 
-                                                id ="frame" 
-                                                type="checkbox"
-                                                value="1" 
-                                                onChange={this.onFrameChange} 
-                                                defaultChecked={frame}
-                                                label={IntlCore.t("builder", "display_frame")} />
+                                                defaultChecked={coordinates}
+                                                label={_("builder", "display_coord")} />
                                         </Col>
                                         <Col md={3} sm={6}>
                                             <FormCheck 
@@ -537,8 +589,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                                 type="checkbox"
                                                 value="1" 
                                                 onChange={this.onTurnChange} 
-                                                defaultChecked={moveturn}
-                                                label={IntlCore.t("builder", "display_moveturn")} />
+                                                defaultChecked={moveTurn}
+                                                label={_("builder", "display_moveturn")} />
                                         </Col>
                                     </Row>
                                 </div>

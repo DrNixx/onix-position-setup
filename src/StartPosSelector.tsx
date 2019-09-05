@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Intl } from 'onix-core';
 import { FenEmptyBoard, FenStandartStart, IOpeningPosition } from 'onix-chess';
 import { FormControl, FormControlProps } from 'react-bootstrap';
-import { Intl as IntlCtrl } from '../Intl';
+import { Intl  } from './Intl';
+import { Intl as IntlCore } from 'onix-core';
 
 export interface StartPosSelectorProps extends FormControlProps {
     fen?: string,
@@ -10,23 +10,25 @@ export interface StartPosSelectorProps extends FormControlProps {
     onChangeFen?: (fen: string) => void,
 }
 
+const _ = IntlCore.t;
+
 export class StartPosSelector extends React.Component<StartPosSelectorProps, {}> {
     /**
      * constructor
      */
     constructor(props: StartPosSelectorProps) {
         super(props);
-        IntlCtrl.register();
+        Intl.register();
     }
 
     private onChange = (e) => {
         let fen: string = e.target.value; 
 
         if (fen === "---") {
-            fen = window.prompt(Intl.t("chess-ctrls", "paste_fen_prompt"), "");
+            fen = window.prompt(_("builder", "paste_fen_prompt"), "");
         }
 
-        if (this.props.onChange) {
+        if (this.props.onChangeFen) {
             this.props.onChangeFen(fen);
         }
     }
@@ -42,7 +44,7 @@ export class StartPosSelector extends React.Component<StartPosSelectorProps, {}>
             }
 
             return (
-                <optgroup label={Intl.t("chess-ctrls", "popular_opening")}>
+                <optgroup label={_("builder", "popular_opening")}>
                     {openings}
                 </optgroup>
             );
@@ -58,11 +60,11 @@ export class StartPosSelector extends React.Component<StartPosSelectorProps, {}>
         
         return (
             <FormControl as="select" size="sm" onChange={this.onChange} value={fen}>
-                <optgroup label={Intl.t("chess-ctrls", "set_board")}>
-                    <option value="">{Intl.t("chess-ctrls", "position_label")}</option>
-                    <option value={FenStandartStart}>{Intl.t("chess-ctrls", "std_fen")}</option>
-                    <option value={FenEmptyBoard}>{Intl.t("chess-ctrls", "empty_fen")}</option>
-                    <option value="---">{Intl.t("chess-ctrls", "get_fen")}</option>
+                <optgroup label={_("builder", "set_board")}>
+                    <option value="">{_("builder", "position_label")}</option>
+                    <option value={FenStandartStart}>{_("builder", "std_fen")}</option>
+                    <option value={FenEmptyBoard}>{_("builder", "empty_fen")}</option>
+                    <option value="---">{_("builder", "get_fen")}</option>
                 </optgroup>
                 {this.getOpenings(openingsPos)}
             </FormControl>

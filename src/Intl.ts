@@ -1,4 +1,5 @@
 import { Intl as IntlCore } from 'onix-core';
+import { Intl as IntlChess } from 'onix-chess';
 
 export class Intl {
     private static intlInitialized = false;
@@ -6,7 +7,7 @@ export class Intl {
     public static register() {
         if (!Intl.intlInitialized) {
             
-            IntlCore.register();
+            IntlChess.register();
 
             IntlCore.registerStrings('builder', {
                 'ru-ru': {

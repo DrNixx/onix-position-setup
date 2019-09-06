@@ -8,7 +8,7 @@ import { pushif } from 'onix-core';
 import { onixPostMessage } from 'onix-io';
 import { Color, Castle, FenStandartStart, Piece, Square, IOpeningPosition, Position } from 'onix-chess';
 import { TextWithCopy } from '../TextWithCopy';
-import { Intl as IntlCore } from 'onix-core';
+import { _ } from 'onix-core';
 import { Intl } from '../Intl';
 import * as cg from 'chessground/types';
 import { Chessground } from 'chessground';
@@ -20,8 +20,6 @@ import { SquareSelector } from '../SquareSelector';
 import { StartPosSelector } from '../StartPosSelector';
 import { WhoMoveSelector } from '../WhoMoveSelector';
 import { BoardSize, BoardSizeClass } from '../Size';
-
-const _ = IntlCore.t;
 
 export interface PosBuilderProps {
     locale?: string,

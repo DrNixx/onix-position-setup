@@ -6,7 +6,7 @@ module.exports = {
     devtool: 'source-map', 
 
     entry: {
-        app: ["./src/index.ts"],
+        app: ["./src/js/index.ts"],
         tests: ["./src/test/index.ts"]
     },
 

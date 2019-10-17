@@ -58,6 +58,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-watch": "^5.0.1",
     "merge2": "^1.3.0",
+    "onix-board-assets": "^3.2.17",
     "ts-loader": "^4.5.0",
     "typescript": "^3.6.4",
     "webpack": "^4.41.2",

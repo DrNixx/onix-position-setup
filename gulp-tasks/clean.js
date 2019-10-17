@@ -1,7 +1,9 @@
-import del from 'del';
-import PATHS from '../paths';
+const del = require('del');
+const PATHS = require('../paths');
 
-export default function clean(cb) {
+module.exports = function(cb) {
 	del.sync(PATHS.clean, {force: true});
   	cb();
 }
+
+module.exports.displayName = 'clean';

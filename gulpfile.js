@@ -1,9 +1,9 @@
-﻿import gulp from 'gulp';
-import clean from './gulp-tasks/clean';
-import scripts from './gulp-tasks/scripts';
-import vendor from './gulp-tasks/vendor';
-import watch from './gulp-tasks/watch';
-import server from './gulp-tasks/server';
+﻿const gulp = require('gulp');
+const clean = require('./gulp-tasks/clean');
+const scripts = require('./gulp-tasks/scripts');
+//var vendor from './gulp-tasks/vendor';
+//var watch from './gulp-tasks/watch';
+//var server from './gulp-tasks/server';
 
 const { series, parallel } = require('gulp');
 

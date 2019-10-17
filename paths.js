@@ -1,9 +1,8 @@
-import { PRODUCTION } from './config';
-
+const { PRODUCTION } = require('./config');
 const base = PRODUCTION ? 'dist' : 'public';
 const assets = base + (PRODUCTION ? '' : '/assets');
 
-export default {
+module.exports = {
 	build: {
 		html: base + '/',
 		assets: assets + '/',

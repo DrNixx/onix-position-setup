@@ -1,3 +1,7 @@
-export const PRODUCTION = process.env.NODE_ENV == 'production';
-export const hmrEnabled = true;
-export const shouldCompressImages = PRODUCTION;
+const PRODUCTION = process.env.NODE_ENV == 'production';
+
+module.exports = {};
+
+module.exports.PRODUCTION = PRODUCTION;
+module.exports.hmrEnabled = true;
+module.exports.shouldCompressImages = PRODUCTION;

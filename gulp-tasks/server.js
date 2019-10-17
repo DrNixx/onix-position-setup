@@ -1,5 +1,4 @@
-import PATHS from '../paths';
-
+const PATHS = require('../paths');
 const browserSync = require('browser-sync').create();
 
 let watchFiles = [
@@ -9,7 +8,7 @@ let watchFiles = [
 	PATHS.build.html + '*.html'
 ];
 
-export default function server() {
+module.exports = function() {
 	browserSync.init({
 		server: {
 			baseDir: './public',

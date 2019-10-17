@@ -1,22 +1,21 @@
-/*
-import gulp from 'gulp';
-import log from 'fancy-log';
-import nunjucksRender from 'gulp-nunjucks-api';
-import notifier from 'node-notifier';
-import plumber from 'gulp-plumber';
-import beautify from 'gulp-jsbeautifier';
+const gulp = require('gulp');
+const log = require('fancy-log')
+const nunjucksRender = require('gulp-nunjucks-api');
+const notifier = require('node-notifier');
+const plumber = require('gulp-plumber');
+const beautify = require('gulp-jsbeautifier');
 
-import { PRODUCTION } from '../config';
-import PATHS from '../paths';
-import * as extensions from '../src/templates/lib/extensions.js';
-import filters from '../src/templates/lib/filters.js';
-import functions from '../src/templates/lib/functions.js';
-import gulpif from 'gulp-if';
+const { PRODUCTION } = require('../config');
+const PATHS = require('../paths');
+const extensions = require('../src/templates/lib/extensions.js');
+const filters = require('../src/templates/lib/filters.js');
+const functions = require('../src/templates/lib/functions.js');
+const gulpif = require('gulp-if');
 
 const globalData = require('../global-data.json');
 const pieces = require('../src/pieces/pieces.json');
 
-export default function html() {
+module.exports = function() {
 	return gulp
 		.src(PATHS.src.nunj)
 		.pipe(
@@ -59,4 +58,3 @@ export default function html() {
 		)
 		.pipe(gulp.dest(PATHS.build.html));
 }
-*/

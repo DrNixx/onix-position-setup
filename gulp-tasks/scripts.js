@@ -1,13 +1,13 @@
-import PATHS from '../paths';
+const PATHS = require('../paths');
 
-import gulp from 'gulp';
-import ts from 'gulp-typescript';
-import sourcemaps from 'gulp-sourcemaps';
-import merge from 'merge2';
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
+const sourcemaps = require('gulp-sourcemaps');
+const merge = require('merge2');
 
 const tsProj = ts.createProject('tsconfig.json');
 
-export default function scripts() {
+module.exports = function() {
         const reporter = ts.reporter.fullReporter();
 
         const tsResult = gulp.src(['src/js/**/*.ts', 'src/js/**/*.tsx'])
@@ -22,3 +22,5 @@ export default function scripts() {
                 .pipe(gulp.dest(PATHS.build.scripts))
         ]);
 }
+
+module.exports.displayName = 'scripts';

@@ -1,9 +1,9 @@
-import gulp from 'gulp';
+const gulp = require('gulp');
 
-import { PRODUCTION } from '../config';
-import PATHS from '../paths';
+const { PRODUCTION } = require('../config');
+const PATHS = require('../paths');
 
-export default function vendor() {
+module.exports = function() {
     return gulp.src([
         './node_modules/chessground/dist/*.*'
         ])

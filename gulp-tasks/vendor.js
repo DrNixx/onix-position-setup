@@ -5,7 +5,9 @@ const PATHS = require('../paths');
 
 module.exports = function() {
     return gulp.src([
-        './node_modules/chessground/dist/*.*'
+        './node_modules/onix-board-assets/dist/assets/**/*.*'
         ])
-        .pipe(gulp.dest(PATHS.build.assets + '/vendor/chessground/'));
+        .pipe(gulp.dest(PATHS.build.assets));
 }
+
+module.exports.displayName = 'vendor';

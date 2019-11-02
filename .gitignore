@@ -1,9 +1,8 @@
 .vscode
-node_modules
-dist
-
-/public/**/*.js
-/public/**/*.js.map
+/node_modules
+/dist
+/public
+.vscode
 
 stats.json
 npm-debug.log

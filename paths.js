@@ -10,6 +10,7 @@ module.exports = {
 	},
 	src: {
 		scripts: './src/js/index.ts',
+		tests: './src/test/index.ts',
 		templates: './src/templates/',
 		nunj: 'src/templates/*.nunj',
 	},

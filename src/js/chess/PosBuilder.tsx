@@ -68,7 +68,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         size: BoardSize.Normal,
         piece: 'merida',
-        square: 'blue',
+        square: 'color-brown',
         markers: '',
     }
 
@@ -340,7 +340,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         pushif(params, moveTurn, ['who', 1]);
 		pushif(params, !coordinates, ['hl', 1]);
         pushif(params, (piece !== 'merida'), ['pset', encodeURIComponent(piece)]);
-        pushif(params, (square !== 'blue'), ['sset', encodeURIComponent(square)]);
+        pushif(params, (square !== PosBuilder.defaultProps.square), ['sset', encodeURIComponent(square)]);
         pushif(params, !!markers, ['mv', markers])
 
 		const makeLink = () => {
@@ -383,7 +383,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             ) : null;
         }
 
-        let containerClass = ['pos-builder'];
+        let containerClass = ['pos-builder', 'is2d'];
         containerClass.push(square);
         containerClass.push(BoardSizeClass[size]);
 

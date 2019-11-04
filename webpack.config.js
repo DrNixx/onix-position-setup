@@ -1,26 +1,31 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
+
+const { PRODUCTION, hmrEnabled } = require('./config');
+const PATHS = require('./paths');
+
+const entryPoints = {
+    //app: path.resolve(__dirname, PATHS.src.scripts),
+    tests: path.resolve(__dirname, PATHS.src.tests),
+};
+
+const hotMiddlewareString = 'webpack-hot-middleware/client?quiet=true&noInfo=true';
 
 module.exports = {
-    mode: 'development',
-    devtool: 'source-map', 
-
-    entry: {
-        app: ["./src/js/index.ts"],
-        tests: ["./src/test/index.ts"]
-    },
-
-    output: {
+    entry: Object.keys(entryPoints).reduce((acc, currentKey) => {
+		acc[currentKey] = [entryPoints[currentKey]];
+		!PRODUCTION && hmrEnabled && acc[currentKey].push(hotMiddlewareString);
+		return acc;
+    }, {}),
+    
+	output: {
         libraryTarget: "umd",
         library: "onix",
-        path: path.join(__dirname, "public/js"),
-        filename: "pos-builder.[name].js"
+		filename: 'pos-builder.[name].js',
+		path: path.resolve(__dirname, PATHS.build.scripts),
+		publicPath: '/assets/js',
     },
-
-    plugins: [
-        new CleanWebpackPlugin(['public/js'])
-    ],
-
+    
     module: {
         rules: [
             {
@@ -28,11 +33,25 @@ module.exports = {
                 loader: 'ts-loader',
                 options: { configFile: 'tsconfig.webpack.json' },
                 exclude: /node_modules/
-            }
-        ]
+            },
+            {
+				type: 'javascript/auto',
+				test: /\.json$/,
+				loader: 'json-loader',
+			},
+        ] 
     },
 
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
-    }
+        extensions: ['.tsx', '.ts', '.js', '.json'],
+        modules: ['node_modules'],
+    },
+
+    plugins: PRODUCTION ? [] : [new webpack.HotModuleReplacementPlugin()],
+	devtool: PRODUCTION ? false : '#eval',
+	mode: PRODUCTION ? 'production' : 'development',
+	optimization: {
+		minimize: PRODUCTION,
+	},
+	watch: !PRODUCTION && !hmrEnabled,
 };

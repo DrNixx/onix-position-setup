@@ -1,0 +1,11 @@
+{% macro piecesBoard(code, name) %}
+	<h2>{{ name }}</h2>
+	
+	<div class="main-board {{ code }}">
+		<div id="{{ code }}" class="cg-wrap"></div>
+	</div>
+	
+	<script>
+    	var cg = Chessground(document.getElementById('{{ code }}'));
+    </script>
+{% endmacro %}

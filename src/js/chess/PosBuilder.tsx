@@ -68,7 +68,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
         size: BoardSize.Normal,
         piece: 'merida',
-        square: 'color-brown',
+        square: 'color-green',
         markers: '',
     }
 
@@ -383,14 +383,14 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             ) : null;
         }
 
-        let containerClass = ['pos-builder', 'is2d'];
-        containerClass.push(square);
-        containerClass.push(BoardSizeClass[size]);
-
-        if (!coordinates) {
-            containerClass.push('no-coords');
-        }
-        
+        const containerClass = [
+            'pos-builder', 
+            'is2d',
+            square,
+            BoardSizeClass[size],
+            {'coords-no': !coordinates }
+        ];
+                
         return (
             <Container className={classNames(containerClass)}>
                 <Row>

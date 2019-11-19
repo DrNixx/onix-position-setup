@@ -12,13 +12,11 @@ const browserSync = require('browser-sync').create();
 const bundler = webpack(webpackConfig);
 
 let watchFiles = [
-	PATHS.build.scripts + '*.js',
 	PATHS.build.html + '*.html'
 ];
 
 if (!hmrEnabled) {
-	watchFiles.push(PATHS.build.scripts + '/**/*.ts');
-	watchFiles.push(PATHS.build.scripts + '/**/*.tsx');
+	watchFiles.push(PATHS.build.scripts + '*.js');
 }
 
 module.exports = function() {
@@ -32,6 +30,8 @@ module.exports = function() {
 						logLevel: 'info',
 						reporter: (middlewareOptions, options) => {
 							const { state, stats } = options;
+							log(state);
+							log(stats);
 							if (state) {
 								if (stats.hasErrors()) {
 									notifier.notify({
@@ -43,7 +43,7 @@ module.exports = function() {
 						},
 					}),
 					webpackHotMiddleware(bundler, {
-						log: false,
+						log: log,
 					}),
 			  ]
 			: [],

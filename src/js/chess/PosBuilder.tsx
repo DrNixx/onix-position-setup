@@ -7,6 +7,7 @@ import { ajax } from 'rxjs/ajax';
 import { pushif } from 'onix-core';
 import { onixPostMessage } from 'onix-io';
 import { Color, Castle, FenStandartStart, Piece, Square, IOpeningPosition, Position } from 'onix-chess';
+import { SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector } from 'onix-chess-ctrls';
 import { TextWithCopy } from '../TextWithCopy';
 import { _ } from 'onix-core';
 import { Intl } from '../Intl';
@@ -14,12 +15,8 @@ import * as cg from 'chessground/types';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
 import { Config } from 'chessground/config';
-import { SizeSelector } from '../SizeSelector';
-import { PieceSelector } from '../PieceSelector';
-import { SquareSelector } from '../SquareSelector';
-import { StartPosSelector } from '../StartPosSelector';
-import { WhoMoveSelector } from '../WhoMoveSelector';
-import { BoardSize, BoardSizeClass } from '../Size';
+
+import { BoardSize, BoardSizeClass } from 'onix-board-assets';
 
 export interface PosBuilderProps {
     locale?: string,
@@ -436,19 +433,19 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                         <Col md={4}>
                                             <FormGroup controlId="size">
                                                 <FormLabel>{_("chess", "size")}</FormLabel>
-                                                <SizeSelector defaultSize={size} onChangeSize={this.onSizeChange} />
+                                                <SizeSelector defaultValue={size} onChangeSize={this.onSizeChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="piece">
                                                 <FormLabel>{_("chess", "pieces")}</FormLabel>
-                                                <PieceSelector defaultPiece={piece} onChangePiece={this.onPieceChange} />
+                                                <PieceSelector defaultValue={piece} onChangePiece={this.onPieceChange} />
                                             </FormGroup>
                                         </Col>
                                         <Col md={4}>
                                             <FormGroup controlId="square">
                                                 <FormLabel>{_("chess", "squares")}</FormLabel>
-                                                <SquareSelector defaultSquare={square} onChangeSquare={this.onSquareChange} />
+                                                <SquareSelector defaultValue={square} onChangeSquare={this.onSquareChange} />
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -465,7 +462,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                         <Col md={4} sm={12}>
                                             <FormGroup controlId="who_move">
                                                 <FormLabel srOnly={true}>{_("chess", "who_move")}</FormLabel>
-                                                <WhoMoveSelector defaultTurn={whoMove} onChangeTurn={this.onMoverChange} />
+                                                <WhoMoveSelector defaultValue={whoMove} onChangeTurn={this.onMoverChange} />
                                             </FormGroup>
                                         </Col>
                                     </Row>

@@ -79,6 +79,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     private position: Position;
 
+    private sizeChanged: boolean = false;
+
     constructor(props: PosBuilderProps) {
         super(props);
 
@@ -116,11 +118,28 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                     }
                 );
         }
+
+        window.addEventListener('resize', this.updateBoard);
     }
-        
+
     componentWillUnmount() {
-        this.cg.destroy()
+        this.cg.destroy();
+        window.removeEventListener('resize', this.updateBoard);
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { state, cg } = this;
+        if (state.size !== prevState.size) {
+            this.updateBoard();
+        }
+    }
+
+    private updateBoard = () => {
+        const { cg } = this;
+        if (cg !== undefined) {
+            cg.redrawAll();
+        }
+    };
 
     private buildCgConfig = () => {
         const { state, position, onPositionChange, onDropPiece } = this;
@@ -130,13 +149,14 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             orientation: state.orientation,
             turnColor: position.WhoMove == Color.Black ? 'black' : 'white',
             coordinates: true,
+            resizable: true,
             events: {
                 change: onPositionChange,
                 dropNewPiece: onDropPiece
             }
         };
         
-        return config
+        return config;
     }
 
     private onPositionChange = () => {
@@ -171,6 +191,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
 
     private onSizeChange? = (size: BoardSize) => {
         const { state } = this;
+        
         this.setState({
             ...state,
             size: size

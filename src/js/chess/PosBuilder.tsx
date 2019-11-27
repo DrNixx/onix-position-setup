@@ -140,11 +140,11 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     }
 
     private onPositionChange = () => {
-
+        console.log('onPositionChange');
     }
 
     private onDropPiece = (piece: cg.Piece, key: cg.Key) => {
-
+        console.log('onDropPiece');
     }
 
     private getNormFen(fen: string) {

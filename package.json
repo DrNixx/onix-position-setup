@@ -20,11 +20,14 @@
   },
   "keywords": [
     "chess",
+    "chess-online.com",
     "position",
-    "setup"
+    "setup",
+    "chessboard",
+    "ui"
   ],
-  "author": "Nick Panteleeff",
-  "license": "MIT",
+  "author": "Nick Panteleeff (https://github.com/DrNixx)",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/DrNixx/onix-position-setup/issues"
   },

@@ -26,7 +26,7 @@ module.exports = function() {
 				log('Webpack', err);
 			}
 
-			log(stats.toString(defaultStatsOptions));
+			// log(stats.toString(defaultStatsOptions));
 
 			resolve();
 		})

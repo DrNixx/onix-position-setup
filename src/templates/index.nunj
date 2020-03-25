@@ -5,6 +5,19 @@
 {% block stylesheets %}
 	{{ super() }}
 	<link rel="stylesheet" href="assets/pieces/external.css" />
+	<style>
+		.board-editor .spare .no-square.selected-square {
+			background: rgba(27, 120, 208, 0.5);
+		}
+		
+		.board-editor .spare .no-square.trash.selected-square {
+    		background: rgba(204, 51, 51, 0.6);
+		}
+
+		.board-editor .spare .no-square.pointer.selected-square {
+			background: rgba(98, 153, 36, 0.6);
+		}
+	</style>
 {% endblock stylesheets %}
 
 {% block scripts %}

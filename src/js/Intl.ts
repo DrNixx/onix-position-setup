@@ -12,6 +12,7 @@ export class Intl {
             IntlCore.registerStrings('builder', {
                 'ru-ru': {
                     pb_title: "Конструктор шахматной позиции",
+                    board_size: "Размер доски",
                     image_link: "URL",
                     forum_code: "CODE",
                     paste_forum_code: "Вставить в сообщение",
@@ -24,10 +25,9 @@ export class Intl {
                     display_flip: "Разворот",
                     display_coord: "Координаты",
                     display_frame: "Рамка",
-                    display_moveturn: "Очередь хода",
+                    display_showturn: "Очередь хода",
                     marks: "Маркеры",
                     marks_hint: "Для установки маркеров укажите наименования клеток или ходов через запятую (например e2-e4,d5,h4)",
-                    copy_to_clipboard: "Копировать в буфер обмена",
                     position_label: "-- Позиция --",        
                     get_fen: "Загрузить FEN",
                     paste_fen_prompt: "Скопируйте сюда собственный FEN",
@@ -36,6 +36,7 @@ export class Intl {
 
                 'en-us': {
                     pb_title: "Chess position builder",
+                    board_size: "Board size",
                     image_link: "URL",
                     forum_code: "CODE",
                     paste_forum_code: "Paste to message body",
@@ -48,10 +49,9 @@ export class Intl {
                     display_flip: "Flip board",
                     display_coord: "Coordinates",
                     display_frame: "Frame",
-                    display_moveturn: "Move turn",
+                    display_showturn: "Move turn",
                     marks: "Markers",
                     marks_hint: "Entry square or move names for marks (example e2-e4,d5,h4)",
-                    copy_to_clipboard: "Copy to clipboard",
                     position_label: "-- Position --",
                     get_fen: "Custom position",
                     paste_fen_prompt: "Paste FEN position",

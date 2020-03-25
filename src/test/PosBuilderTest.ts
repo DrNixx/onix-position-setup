@@ -1,17 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { PosBuilder } from '../js/chess/PosBuilder';
+import { PosBuilder, PosBuilderProps } from '../js/chess/PosBuilder';
 
-export const PosBuilderTest = (props, container: HTMLElement) => {
+export const PosBuilderTest = (props: PosBuilderProps, container: HTMLElement) => {
     ReactDOM.render(React.createElement(PosBuilder, props), container, () => {});
 };
 
-var props = {
-    board: {
-        size: 4, 
-        flip: false
-    },
+var props: PosBuilderProps = {
+    size: 4, 
+    orientation: "white",
     dialog: true
 };
 
-PosBuilderTest(props, document.getElementById("boardHere"));
+PosBuilderTest(props, document.getElementById("boardHere")!);

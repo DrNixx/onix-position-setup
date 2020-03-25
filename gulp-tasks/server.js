@@ -30,13 +30,14 @@ module.exports = function() {
 						logLevel: 'info',
 						reporter: (middlewareOptions, options) => {
 							const { state, stats } = options;
-							log(state);
-							log(stats);
 							if (state) {
 								if (stats.hasErrors()) {
+									const msg = stats.compilation.errors[0].message;
+									console.error(msg);
+									var justText = msg.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 									notifier.notify({
 										title: 'Webpack compilation error',
-										message: stats.compilation.errors[0].error.toString(),
+										message: justText
 									});
 								}
 							}

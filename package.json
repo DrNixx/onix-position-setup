@@ -12,7 +12,7 @@
     "webpack": "webpack --config webpack.config.js",
     "stats": "webpack --profile --json > stats.json",
     "statsp": "webpack --profile --json --mode=production > stats.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Warning: no test specified\""
   },
   "repository": {
     "type": "git",

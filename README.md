@@ -1,6 +1,6 @@
 # onix-position-setup
 
-[![npm version][npm-badge]][npm] [![npm downloads][npd-badge]][npm] [![dependencies Status][dps-badge]][dps][![FOSSA Status][fossa-badge]][fossa
+[![npm version][npm-badge]][npm] [![npm downloads][npd-badge]][npm] [![dependencies Status][dps-badge]][dps][![FOSSA Status][fossa-badge]][fossa]
 
 Chess position constructor.
 

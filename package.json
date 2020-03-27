@@ -26,7 +26,7 @@
     "chessboard",
     "ui"
   ],
-  "author": "Nick Panteleeff (https://github.com/DrNixx)",
+  "author": "Nick Panteleeff <drnixx@gmail.com> (https://github.com/DrNixx)",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/DrNixx/onix-position-setup/issues"

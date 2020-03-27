@@ -1,6 +1,6 @@
 # onix-position-setup
 
-[![npm version][npm-badge]][npm] [![npm downloads][npd-badge]][npm] [![dependencies Status][dps-badge]][dps][![FOSSA Status][fossa-badge]][fossa]
+[![npm version][npm-badge]][npm] [![npm downloads][npd-badge]][npm] [![dependencies Status][dps-badge]][dps]
 
 Chess position constructor.
 
@@ -27,5 +27,4 @@ Please read more about GPL for JavaScript on [greendrake.info/#nfy0](http://gree
 [dps-badge]: https://david-dm.org/DrNixx/onix-position-setup/status.svg
 [dps]: https://david-dm.org/DrNixx/onix-position-setup
 [npm]: https://www.npmjs.com/package/onix-position-setup
-[fossa-badge]: https://app.fossa.com/api/projects/git%2Bgithub.com%2FDrNixx%2Fonix-position-setup.svg?type=shield
-[fossa]: https://app.fossa.com/projects/git%2Bgithub.com%2FDrNixx%2Fonix-position-setup?ref=badge_shield
+

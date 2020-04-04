@@ -1,0 +1,25 @@
+{
+    "builder": {
+        "pb_title": "Chess position builder",
+        "board_size": "Board size",
+        "image_link": "URL",
+        "forum_code": "CODE",
+        "paste_forum_code": "Paste to message body",
+        "pos_param": "Posittion settings",
+        "ep_target_hint": "En passant square (unless the last pawn's move was on the 2 horizontal)",
+        "set_board": "Set the board",
+        "std_fen": "Standart start",
+        "empty_fen": "Empty board",
+        "pos_diplay": "Display",
+        "display_flip": "Flip board",
+        "display_coord": "Coordinates",
+        "display_frame": "Frame",
+        "display_showturn": "Move turn",
+        "marks": "Markers",
+        "marks_hint": "Entry square or move names for marks (example e2-e4,d5,h4)",
+        "position_label": "-- Position --",
+        "get_fen": "Custom position",
+        "paste_fen_prompt": "Paste FEN position",
+        "popular_opening": "Popular openings"
+    }
+}

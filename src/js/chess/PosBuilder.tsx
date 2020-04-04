@@ -8,7 +8,9 @@ import { postMessage } from 'onix-io-postmessage';
 import { Colors, Squares, Piece, Square, IOpeningPosition, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide } from 'onix-chess';
 import { /* Piece as PieceComponent, */SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector, TextWithCopy } from 'onix-chess-ctrls';
 import { _ } from 'onix-core';
-import { Intl } from '../Intl';
+import { i18n } from 'onix-chess';
+import { i18n } from '../Intl';
+
 import * as cg from 'chessground/types';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
@@ -122,7 +124,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     constructor(props: PosBuilderProps) {
         super(props);
 
-        Intl.register();
+        i18nBuilder();
 
         const { fen, orientation, showTurn, coordinates, size, piece, square, markers } = this.props;
 

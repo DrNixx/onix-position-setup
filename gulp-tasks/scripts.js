@@ -8,19 +8,23 @@ const merge = require('merge2');
 const tsProj = ts.createProject('tsconfig.json');
 
 module.exports = function() {
-        const reporter = ts.reporter.fullReporter();
+    const copyJson = gulp.src('src/js/**/*.json');
+    
+    const reporter = ts.reporter.fullReporter();
 
-        const tsResult = gulp.src(['src/js/**/*.ts', 'src/js/**/*.tsx'])
-            .pipe(sourcemaps.init())
-            .pipe(tsProj(reporter));
+    const tsResult = gulp.src(['src/js/**/*.ts', 'src/js/**/*.tsx'])
+        .pipe(sourcemaps.init())
+        .pipe(tsProj(reporter));
 
-        return merge([
-            tsResult.dts
-                .pipe(gulp.dest(PATHS.build.scripts)),
-            tsResult.js
-                .pipe(sourcemaps.write('.'))
-                .pipe(gulp.dest(PATHS.build.scripts))
-        ]);
+    return merge([
+        tsResult.dts
+            .pipe(gulp.dest(PATHS.build.scripts)),
+        copyJson
+            .pipe(gulp.dest(PATHS.build.scripts)),
+        tsResult.js
+            .pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest(PATHS.build.scripts))
+    ]);
 }
 
 module.exports.displayName = 'scripts';

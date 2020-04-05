@@ -12,7 +12,8 @@ const browserSync = require('browser-sync').create();
 const bundler = webpack(webpackConfig);
 
 let watchFiles = [
-	PATHS.build.html + '*.html'
+	PATHS.build.html + '*.html',
+	PATHS.build.styles + '*.css'
 ];
 
 if (!hmrEnabled) {

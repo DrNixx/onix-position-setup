@@ -852,7 +852,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                     <Row>
                                         <Col md={8} sm={12}>
                                             <FormGroup controlId="startpos">
-                                                <FormLabel srOnly={true}>{_("chess-ctrls", "position_label")}</FormLabel>
+                                                <FormLabel srOnly={true}>{_("builder", "position_label")}</FormLabel>
                                                 <StartPosSelector fen={fenStr} openingsPos={openings} onChangeFen={this.onStartChange} />
                                             </FormGroup>
                                         </Col>

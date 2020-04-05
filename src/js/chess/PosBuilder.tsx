@@ -6,10 +6,10 @@ import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Contain
 import { pushif } from 'onix-core';
 import { postMessage } from 'onix-io-postmessage';
 import { Colors, Squares, Piece, Square, IOpeningPosition, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide } from 'onix-chess';
-import { /* Piece as PieceComponent, */SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector, TextWithCopy } from 'onix-chess-ctrls';
+import { SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector, TextWithCopy } from 'onix-chess-ctrls';
 import { _ } from 'onix-core';
-import { i18n } from 'onix-chess';
-import { i18n } from '../Intl';
+import { i18nRegister as i18nRegisterChess } from 'onix-chess';
+import { register } from '../i18n';
 
 import * as cg from 'chessground/types';
 import { Chessground } from 'chessground';
@@ -20,7 +20,6 @@ import { DrawShape } from 'chessground/draw';
 import { eventPosition, isRightButton as isRightButtonEvent } from 'chessground/util';
 
 import { BoardSize, BoardSizeClass } from 'onix-board-assets';
-import { cursorTo } from 'readline';
 
 type Selected = "pointer" | "trash" | [cg.Color, cg.Role];
 
@@ -124,7 +123,8 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     constructor(props: PosBuilderProps) {
         super(props);
 
-        i18nBuilder();
+        i18nRegisterChess();
+        register();
 
         const { fen, orientation, showTurn, coordinates, size, piece, square, markers } = this.props;
 

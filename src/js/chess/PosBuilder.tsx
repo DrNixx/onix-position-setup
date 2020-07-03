@@ -1,5 +1,5 @@
 import toSafeInteger from 'lodash-es/toSafeInteger';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container, Card } from 'react-bootstrap';

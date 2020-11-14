@@ -2,7 +2,6 @@ const log = require('fancy-log');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const webpack = require('webpack');
-const notifier = require('node-notifier');
 
 const PATHS = require('../paths');
 const webpackConfig = require('../webpack.config');
@@ -27,22 +26,7 @@ module.exports = function() {
 			middleware: hmrEnabled
 			? [
 					webpackDevMiddleware(bundler, {
-						publicPath: webpackConfig.output.publicPath,
-						logLevel: 'info',
-						reporter: (middlewareOptions, options) => {
-							const { state, stats } = options;
-							if (state) {
-								if (stats.hasErrors()) {
-									const msg = stats.compilation.errors[0].message;
-									console.error(msg);
-									var justText = msg.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
-									notifier.notify({
-										title: 'Webpack compilation error',
-										message: justText
-									});
-								}
-							}
-						},
+						publicPath: webpackConfig.output.publicPath
 					}),
 					webpackHotMiddleware(bundler, {
 						log: log,

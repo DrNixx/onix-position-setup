@@ -4,7 +4,10 @@
       "@babel/preset-env",
       {
         "targets": {
-          "esmodules": true
+          "chrome": "76",
+          "firefox": "61",
+          "opera": "55",
+          "safari": "12"
         }
       }
     ],

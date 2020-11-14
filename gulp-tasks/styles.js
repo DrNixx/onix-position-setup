@@ -23,7 +23,7 @@ function sassFunctions(options) {
     var types     = require('node-sass').types;
     var mime      = require('mime');
   
-    mime.define( {"image/x-icon": ["cur", "*ico"]} );
+    // mime.define( {"image/x-icon": ["cur", "*ico"]} );
 
     var funcs = {};
   

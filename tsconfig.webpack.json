@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
+        "target": "ES2016",
         "module": "commonjs",
-        "target": "ES6",
-        "lib": ["DOM", "ES6"],
+        "lib": ["DOM", "ES2016", "DOM.iterable"],
         "jsx": "react",
         "esModuleInterop":true,
         "sourceMap": true,

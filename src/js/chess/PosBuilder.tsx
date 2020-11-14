@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container, Card } from 'react-bootstrap';
 import { pushif } from 'onix-core';
 import { postMessage } from 'onix-io-postmessage';
-import { Colors, Squares, Piece, Square, IOpeningPosition, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide } from 'onix-chess';
+import { Colors, Squares, Piece, IOpeningPosition, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide, Square } from 'onix-chess';
 import { SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector, TextWithCopy } from 'onix-chess-ctrls';
 import { _ } from 'onix-core';
 import { i18nRegister as i18nRegisterChess } from 'onix-chess';
@@ -650,7 +650,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
         const { deletePiece, cg } = this;
 
         if (e.type === 'touchstart') {
-            if (cg!.state.pieces[key]) {
+            if (cg!.state.pieces.get(key)) {
               (cg!.state.draggable.current!.element as HTMLElement).style.display = 'none';
               cg!.cancelMove();
             }
@@ -664,9 +664,9 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
     private deletePiece = (key: cg.Key): void => {
         const { cg } = this;
 
-        cg!.setPieces({
-          [key]: undefined
-        });
+        cg!.setPieces(new Map([
+          [key, undefined]
+        ]));
         
         this.onPositionChange();
     };
@@ -711,7 +711,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             if (sel === 'trash') {
                 deleteOrHidePiece(key, e.nativeEvent);
             } else {
-                const existingPiece = cg!.state.pieces[key];
+                const existingPiece = cg!.state.pieces.get(key);
                 const piece = {
                     color: sel[0],
                     role: sel[1]
@@ -725,9 +725,9 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                     const endEvents = { mousedown: 'mouseup', touchstart: 'touchend' };
                     document.addEventListener(endEvents[e.type], () => this.placeDelete = false, { once: true });
                 } else if (!this.placeDelete && (e.type === 'mousedown' || e.type === 'touchstart' || key !== this.lastKey)) {
-                    cg!.setPieces({
-                        [key]: piece
-                    });
+                    cg!.setPieces(new Map([
+                        [key, piece]
+                    ]));
 
                     this.onPositionChange();
                     cg!.cancelMove();
@@ -796,35 +796,36 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
                                 </div>
 
                                 {renderDialogButton(!!dialog, code)}
+                                <div>
+                                    <div className="code-row">
+                                        <Row>
+                                            <Col md={12}>
+                                                <FormGroup controlId="fen">
+                                                    <FormLabel>{_("chess", "fen")}</FormLabel>
+                                                    <TextWithCopy value={fenStr} size="sm" placeholder={_("chess", "fen")} />
+                                                </FormGroup>    
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col md={12}>
+                                                <FormGroup controlId="image_link">
+                                                    <FormLabel>{_("builder", "image_link")}</FormLabel>
+                                                    <TextWithCopy value={makeLink(fenStr, params)} size="sm" placeholder={_("builder", "image_link")} />
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col md={12}>
+                                                <FormGroup controlId="forum_code">
+                                                    <FormLabel>{_("builder", "forum_code")}</FormLabel>
+                                                    <TextWithCopy value={code} size="sm" placeholder={_("builder", "forum_code")} />
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </div>
                             </div>
                             <div className="controls flex-grow-1 pl-lg-4">
-                                <div className="code-row">
-                                    <Row>
-                                        <Col md={12}>
-                                            <FormGroup controlId="fen">
-                                                <FormLabel>{_("chess", "fen")}</FormLabel>
-                                                <TextWithCopy value={fenStr} size="sm" placeholder={_("chess", "fen")} />
-                                            </FormGroup>    
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={12}>
-                                            <FormGroup controlId="image_link">
-                                                <FormLabel>{_("builder", "image_link")}</FormLabel>
-                                                <TextWithCopy value={makeLink(fenStr, params)} size="sm" placeholder={_("builder", "image_link")} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={12}>
-                                            <FormGroup controlId="forum_code">
-                                                <FormLabel>{_("builder", "forum_code")}</FormLabel>
-                                                <TextWithCopy value={code} size="sm" placeholder={_("builder", "forum_code")} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                </div>
-
                                 <div className="pos-sets">
                                     <Row>
                                         <Col md={4}>

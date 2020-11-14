@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const log = require('fancy-log');
 const nunjucksRender = require('gulp-nunjucks-api');
-const notifier = require('node-notifier');
 const plumber = require('gulp-plumber');
 const beautify = require('gulp-jsbeautifier');
 
@@ -22,10 +21,6 @@ module.exports = function() {
 			plumber({
 				errorHandler: function(err) {
 					log(err.message);
-					notifier.notify({
-						title: 'Nunjucks compilation error',
-						message: err.message,
-					});
 				},
 			})
 		)

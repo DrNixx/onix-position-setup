@@ -48,7 +48,7 @@ module.exports = {
     },
 
     plugins: PRODUCTION ? [] : [new webpack.HotModuleReplacementPlugin()],
-	devtool: PRODUCTION ? false : '#eval-source-map',
+	devtool: PRODUCTION ? false : 'eval-source-map',
 	mode: PRODUCTION ? 'production' : 'development',
 	optimization: {
 		minimize: PRODUCTION,

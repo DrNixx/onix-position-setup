@@ -5,8 +5,9 @@ import * as ReactDOM from 'react-dom';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container, Card } from 'react-bootstrap';
 import { pushif } from 'onix-core';
 import { postMessage } from 'onix-io-postmessage';
-import { Colors, Squares, Piece, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide, Square, IChessOpening } from 'onix-chess';
+import { Colors, Squares, Piece, Position, FenString, FenFormat, Color, Castling, CastlingStr, CastlingSide, Square, IChessOpening, Chess } from 'onix-chess';
 import { SizeSelector, PieceSelector, SquareSelector, StartPosSelector, WhoMoveSelector, TextWithCopy } from 'onix-chess-ctrls';
+
 import { _ } from 'onix-core';
 import { i18nRegister as i18nRegisterChess } from 'onix-chess';
 import { register } from '../i18n';
@@ -145,7 +146,7 @@ export class PosBuilder extends React.Component<PosBuilderProps, PosBuilderState
             castling: pos.Castling.asFen(),
             ep_target: pos.EpTarget,
             halfMove: pos.HalfMoveCount,
-            moveNo: pos.getMoveNo(),
+            moveNo: Chess.plyToTurn(pos.PlyCount),
 
             markers: markers,
             markersVal: markers || "",

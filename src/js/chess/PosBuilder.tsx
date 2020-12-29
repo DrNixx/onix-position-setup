@@ -1,7 +1,7 @@
-import toSafeInteger from 'lodash-es/toSafeInteger';
-import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import toSafeInteger from 'lodash/toSafeInteger';
+import classNames from 'classnames';
 import { Row, Col, Button, FormGroup, FormControl, FormLabel, FormCheck, Container, Card } from 'react-bootstrap';
 import { pushif } from 'onix-core';
 import { postMessage } from 'onix-io-postmessage';

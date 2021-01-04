@@ -7,7 +7,7 @@
         "jsx": "react",
         "esModuleInterop":true,
         "sourceMap": true,
-        "declaration": false,
+        "declaration": true,
         "strict": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,

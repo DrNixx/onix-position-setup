@@ -1,6 +1,6 @@
 {
   "name": "onix-position-setup",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Chess position constructor",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
